@@ -1,0 +1,34 @@
+<html>
+<head>
+    <title>Vue-Flex-Data-Table Component</title>
+    <link href="table-component.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"
+          integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+    <script src="https://use.fontawesome.com/46b0b94e74.js"></script>
+
+</head>
+<body>
+<div id="app" class="container">
+    <div class="card mt-5 mb-5">
+        <h4 class="card-header bg-info text-center">Vue Flex Datatable</h4>
+        <div class="card-body">
+            <flex-table :columns="cols" :rows="rows"></flex-table>
+        </div>
+        <div class="card-footer text-center">
+            <section class="page-about">
+                <h4 class="page-subtitle">About</h4>
+                <p>The flexible datatable component above is powered by <a
+                        href="https://github.com/nrobates/vue-flex-datatable">nrobates/vue-flex-datatable</a>.</p>
+            </section>
+
+            <small class="page-outro">
+                <a href="https://github.com/nrobates/vue-flex-datatable">Code on GitHub</a> |
+                Proudly presented by <a href="http://nrobates.com">nrobates.com</a>
+            </small>
+        </div>
+    </div>
+</div>
+
+<script src="build/app.js"></script>
+</body>
+</html>
