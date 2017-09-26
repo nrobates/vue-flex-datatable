@@ -118,8 +118,8 @@
       FlexTableToggle
     },
     props: {
-      columns: {default: () => [], type: [Array, Function]},
-      rows: {default: () => [], type: [Array, Function]},
+      columns: {default: () => [], type: Array},
+      rows: {default: () => [], type: Array},
 
       childRows: {default: false, type: Boolean},
       childRowsKey: {default: null, type: String},
@@ -149,7 +149,8 @@
       },
       pagination: null,
       localSettings: {},
-      slotObserver: null
+      slotObserver: null,
+      toggles: []
     }),
     computed: {
       mappedColumns () {

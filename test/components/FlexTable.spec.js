@@ -20,7 +20,8 @@ test('sets default data', (t) => {
     localSettings: {},
     pagination: null,
     slotObserver: null,
-    sort: { fieldName: '', order: 'asc' }
+    sort: { fieldName: '', order: 'asc' },
+    toggles: []
   })
 })
 
