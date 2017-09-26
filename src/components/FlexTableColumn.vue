@@ -1,5 +1,5 @@
 <template>
-    <td>{{columnContent}}</td>
+    <td v-html="columnContent"></td>
 </template>
 
 <script>

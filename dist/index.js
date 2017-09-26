@@ -18701,10 +18701,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
     props: {
       columns: { default: function _default() {
           return [];
-        }, type: [Array, Function] },
+        }, type: Array },
       rows: { default: function _default() {
           return [];
-        }, type: [Array, Function] },
+        }, type: Array },
 
       childRows: { default: false, type: Boolean },
       childRowsKey: { default: null, type: String },
@@ -18735,7 +18735,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         },
         pagination: null,
         localSettings: {},
-        slotObserver: null
+        slotObserver: null,
+        toggles: []
       };
     },
     computed: {
