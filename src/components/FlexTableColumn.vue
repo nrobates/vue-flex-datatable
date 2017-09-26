@@ -16,9 +16,9 @@
     computed: {
       columnContent () {
         if (_.isFunction(this.column.formatter)) {
-          return this.column.formatter(_.get(this.row, this.show), this.row)
+          return this.column.formatter(_.get(this.row, this.column.show), this.row)
         }
-        return _.get(this.row, this.show)
+        return _.get(this.row, this.column.show)
       }
     },
     watch: {},

@@ -29,9 +29,6 @@
       },
       bodyClose () {
         return this.childRows ? '</tbody>' : ''
-      },
-      childRowColumn () {
-        return _.get(this.data, this.childRowsKey)
       }
     }
   }

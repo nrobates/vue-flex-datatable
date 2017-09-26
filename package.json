@@ -1,9 +1,9 @@
 {
   "name": "vue-flex-datatable",
-  "version": "0.0.1-alpha",
+  "version": "0.0.2-alpha",
   "description": "A flexible use-case datatable for Vue.js 2.x",
   "author": "Nicholas Bates <info@nrobates.com>",
-  "private": true,
+  "private": false,
   "scripts": {
     "start": "webpack-dev-server --config docs/webpack.config.js",
     "demo": "NODE_ENV=production webpack --config docs/webpack.config.js",

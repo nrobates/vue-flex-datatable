@@ -68,7 +68,7 @@
                                 v-for="(column, cIndex) in visibleColumns"
                                 :key="cIndex"
                                 :row="row"
-                                :show="column.show"
+                                :column="column"
                         ></flex-table-column>
                     </tr>
                     </tbody>
@@ -154,8 +154,11 @@
     computed: {
       mappedColumns () {
         return this.columns.map((col) => {
-          let columnMap = {}
-          Object.assign(columnMap, settings.columnSettings, col)
+          for (var key in settings.columnSettings) {
+            if (typeof col[key] === 'undefined') {
+              Vue.set(col, key, settings.columnSettings[key])
+            }
+          }
           return col
         })
       },
@@ -163,7 +166,7 @@
         return this.mappedColumns.filter(column => column.toggleable)
       },
       visibleColumns () {
-        return this.mappedColumns.filter(column => column.visible)
+        return this.mappedColumns.filter(column => column.visible === true)
       },
       filterableColumns () {
         return this.visibleColumns.filter(column => column.filterable)
