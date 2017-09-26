@@ -11,7 +11,6 @@
 </template>
 
 <script>
-  import _ from 'lodash'
   import FlexTableColumn from './FlexTableColumn.vue'
 
   export default {
