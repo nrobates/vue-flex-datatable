@@ -114,7 +114,7 @@
       FlexTableToggle
     },
     props: {
-      rows: {default: () => [], type: Array},
+      rows: {default: () => [], type: [Array, Function]},
 
       childRows: {default: false, type: Boolean},
       childRowsKey: {default: null, type: String},
@@ -155,6 +155,7 @@
       columnToggles () {
         return this.columns.filter(column => column.toggleable)
       },
+
       columnToggleGroups () {
         let groupKeys = Object.create({})
         this.toggleableColumns.forEach((col) => {
@@ -166,18 +167,23 @@
         })
         return groupKeys
       },
+
       toggleableColumns () {
         return this.columns.filter(column => column.toggleable === true)
       },
+
       visibleColumns () {
         return this.columns.filter(column => column.isVisible === true)
       },
+
       filterableColumns () {
         return this.visibleColumns.filter(column => column.filterable)
       },
+
       tableClasses () {
         return classList('flex-table', this.tableClass)
       },
+
       displayedRows () {
         if (!this.showFilter) {
           return this.sortedRows
@@ -195,6 +201,7 @@
             .length
         })
       },
+
       sortedRows () {
         if (this.sort.fieldName === '') {
           return this.tableRows
@@ -208,6 +215,7 @@
         }
         return _.orderBy(this.tableRows, this.sort.fieldName, this.sort.order)
       },
+
       tableRows () {
         return this.rows.map((row) => {
           Vue.set(row, 'showChildren', false)
@@ -220,12 +228,15 @@
       columnValue (row, column) {
         return _.get(row, column.show)
       },
+
       childRowColumn (row) {
         return _.get(row, this.childRowsKey)
       },
+
       getColumn (columnName) {
         return this.visibleColumns.find(column => column.show === columnName)
       },
+
       updateSort (column) {
         if (this.sort.fieldName !== column.show) {
           this.sort.fieldName = column.show
@@ -234,6 +245,7 @@
           this.sort.order = (this.sort.order === 'asc' ? 'desc' : 'asc')
         }
       },
+
       mountColumns () {
         const components = this.$slots.default.filter((component) => {
           return typeof component.componentInstance !== 'undefined' && component.componentInstance.$vnode.tag.includes('FlexTableColumn')
@@ -242,6 +254,7 @@
           return component.componentInstance
         })
       },
+
       mapToggles () {
         this.toggleGroups = [...new Set(this.toggleableColumns.map(col => col.toggleableGroup))]
       }
