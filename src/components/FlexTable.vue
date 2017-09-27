@@ -1,7 +1,7 @@
 <template>
     <div class="flex-table-wrapper">
         <div class="row">
-            <div class="col-12 col-md-6 mb-2 text-center">
+            <div class="col-12 col-md-6 mb-2 text-center flex-table-search-wrapper" v-show="showSearch">
                 <slot name="search">
                     <input
                             :class="filterInputClass"
@@ -10,7 +10,7 @@
                     >
                 </slot>
             </div>
-            <div class="col-12 col-md-6 mb-2 text-center">
+            <div class="col-12 col-md-6 mb-2 text-center flex-table-filter-wrapper" v-show="showFilter">
                 <input
                         :class="filterInputClass"
                         type="text"
@@ -23,19 +23,14 @@
                         class="table-component__filter__clear"
                 >×</a>
             </div>
-            <div class="col-12 col-md-6 mb-2 align-content-center" v-show="columnToggles.length">
-                <span><strong>{{toggleLabel}}</strong></span>
-
-                <flex-table-toggle
-                        v-for="(toggle, tIndex) in columnToggles"
-                        :key="tIndex"
-                        v-model="toggle.visible"
-                        :label="toggle.toggleLabel"
-                        class="mr-1"
-                ></flex-table-toggle>
+            <div class="col-12 col-md-6 mb-2 align-content-center flex-table-toggles-wrapper"
+                 v-show="columnToggles.length">
+                <flex-table-toggles :label="toggleLabel" :toggles="columnToggleGroups"
+                                    class="mr-1"></flex-table-toggles>
 
             </div>
-            <div class="col-12 col-md-6 mb-2 text-right align-content-center">
+            <div class="col-12 col-md-6 mb-2 text-right align-content-center flex-table-group-by-wrapper"
+                 v-show="showGroupBy">
                 <span><strong>Group By: </strong></span>
 
             </div>
@@ -60,42 +55,39 @@
                     <tbody :key="rIndex" :id="'flex-table-row-' + rIndex" class="flex-table-row">
                     <tr>
                         <td>
-                            <a href="#" class="btn btn-sm btn-link"
+                            <a href="#" class="btn btn-sm btn-link" :class="{'disabled': !row[childRowsKey]}"
+                               :disabled="!row[childRowsKey]"
                                @click.prevent="row.showChildren = !row.showChildren"><i
                                     :class="['fa', {'fa-plus-circle': !row.showChildren, 'fa-minus-circle': row.showChildren}]"></i></a>
                         </td>
-                        <flex-table-column
-                                v-for="(column, cIndex) in visibleColumns"
-                                :key="cIndex"
-                                :row="row"
-                                :column="column"
-                        ></flex-table-column>
+                        <flex-table-cell v-for="(column, cIndex) in visibleColumns" :key="cIndex" :column="column"
+                                         :row="row"></flex-table-cell>
                     </tr>
                     </tbody>
                     <transition name="fade">
                         <tbody :id="'flex-table-child-rows-' + rIndex" v-show="row.showChildren"
                                class="flex-table-child-rows">
-                        <flex-table-row
-                                v-for="(childRow, crIndex) in childRowColumn(row)"
-                                :key="rIndex + '-' + crIndex"
-                                :data="childRow"
-                                :columns="visibleColumns"
-                                childRows
-                        ></flex-table-row>
+                        <tr v-for="(childRow, crIndex) in row[childRowsKey]" :key="crIndex">
+                            <td></td>
+                            <flex-table-cell v-for="(column, cIndex) in visibleColumns" :key="cIndex" :column="column"
+                                             :row="childRow"></flex-table-cell>
+                        </tr>
                         </tbody>
                     </transition>
                 </template>
             </template>
 
             <tbody v-else>
-            <flex-table-row
-                    v-for="(row, rIndex) in displayedRows"
-                    :key="rIndex"
-                    :data="row"
-                    :columns="visibleColumns"
-            ></flex-table-row>
+            <tr v-for="(row, rIndex) in displayedRows" :key="rIndex">
+                <flex-table-cell v-for="(column, cIndex) in visibleColumns" :key="cIndex" :column="column"
+                                 :row="row"></flex-table-cell>
+            </tr>
             </tbody>
         </table>
+
+        <div style="display: none;">
+            <slot></slot>
+        </div>
     </div>
 </template>
 
@@ -108,24 +100,30 @@
   import FlexTableColumn from './FlexTableColumn.vue'
   import FlexTableHeaderColumn from './FlexTableHeaderColumn.vue'
   import FlexTableRow from './FlexTableRow.vue'
+  import FlexTableCell from './FlexTableCell.vue'
+  import FlexTableToggles from './FlexTableToggles.vue'
 
   export default {
     name: 'FlexTable',
     components: {
+      FlexTableToggles,
+      FlexTableCell,
       FlexTableRow,
       FlexTableHeaderColumn,
       FlexTableColumn,
       FlexTableToggle
     },
     props: {
-      columns: {default: () => [], type: Array},
       rows: {default: () => [], type: Array},
 
       childRows: {default: false, type: Boolean},
       childRowsKey: {default: null, type: String},
 
-      showCaption: {default: true},
-      showFilter: {default: true},
+      showCaption: {default: false, type: Boolean},
+      showFilter: {default: false, type: Boolean},
+      showSearch: {default: false, type: Boolean},
+      showGroupBy: {default: false, type: Boolean},
+
       filterPlaceholder: {default: settings.filterPlaceholder},
       filterInputClass: {default: settings.filterInputClass},
       filterNoResults: {default: settings.filterNoResults},
@@ -142,6 +140,7 @@
       toggleLabel: {default: settings.toggleLabel}
     },
     data: () => ({
+      columns: [],
       filter: '',
       sort: {
         fieldName: '',
@@ -150,24 +149,28 @@
       pagination: null,
       localSettings: {},
       slotObserver: null,
-      toggles: []
+      toggleGroups: []
     }),
     computed: {
-      mappedColumns () {
-        return this.columns.map((col) => {
-          for (var key in settings.columnSettings) {
-            if (typeof col[key] === 'undefined') {
-              Vue.set(col, key, settings.columnSettings[key])
-            }
-          }
-          return col
-        })
-      },
       columnToggles () {
-        return this.mappedColumns.filter(column => column.toggleable)
+        return this.columns.filter(column => column.toggleable)
+      },
+      columnToggleGroups () {
+        let groupKeys = Object.create({})
+        this.toggleableColumns.forEach((col) => {
+          Vue.set(groupKeys, col.toggleableGroup, {
+            visible: true,
+            label: col.toggleableGroup,
+            columns: this.columnToggles.filter(column => column.toggleableGroup === col.toggleableGroup)
+          })
+        })
+        return groupKeys
+      },
+      toggleableColumns () {
+        return this.columns.filter(column => column.toggleable === true)
       },
       visibleColumns () {
-        return this.mappedColumns.filter(column => column.visible === true)
+        return this.columns.filter(column => column.isVisible === true)
       },
       filterableColumns () {
         return this.visibleColumns.filter(column => column.filterable)
@@ -179,13 +182,13 @@
         if (!this.showFilter) {
           return this.sortedRows
         }
-        if (!this.columns.filter(column => column.filterable === true).length) {
+        if (!this.columns.filter(column => column._props.filterable === true).length) {
           return this.sortedRows
         }
         return this.sortedRows.filter((row) => {
           return this.visibleColumns
-            .filter(column => column.filterable === true)
-            .map(column => _.get(row, column.show).toString().toLowerCase())
+            .filter(column => column._props.filterable === true)
+            .map(column => _.get(row, column._props.show).toString().toLowerCase())
             .filter((filteredValue) => {
               return filteredValue.includes(this.filter.toLowerCase())
             })
@@ -196,7 +199,7 @@
         if (this.sort.fieldName === '') {
           return this.tableRows
         }
-        if (this.mappedColumns.length === 0) {
+        if (this.visibleColumns.length === 0) {
           return this.tableRows
         }
         const sortColumn = this.getColumn(this.sort.fieldName)
@@ -221,7 +224,7 @@
         return _.get(row, this.childRowsKey)
       },
       getColumn (columnName) {
-        return this.mappedColumns.find(column => column.show === columnName)
+        return this.visibleColumns.find(column => column.show === columnName)
       },
       updateSort (column) {
         if (this.sort.fieldName !== column.show) {
@@ -230,14 +233,37 @@
         } else {
           this.sort.order = (this.sort.order === 'asc' ? 'desc' : 'asc')
         }
+      },
+      mountColumns () {
+        const components = this.$slots.default.filter((component) => {
+          return typeof component.componentInstance !== 'undefined' && component.componentInstance.$vnode.tag.includes('FlexTableColumn')
+        })
+        this.columns = components.map((component) => {
+          return component.componentInstance
+        })
+      },
+      mapToggles () {
+        this.toggleGroups = [...new Set(this.toggleableColumns.map(col => col.toggleableGroup))]
       }
     },
-    mounted () {},
+    async mounted () {
+      this.mountColumns()
+      await this.mapToggles()
+    },
     created () {}
   }
 </script>
 
-<style lang="css">
+<style lang="scss" scoped>
+    /* Busy table styling */
+    .flex-table[aria-busy="false"] {
+        opacity: 1;
+    }
+
+    .flex-table[aria-busy="true"] {
+        opacity: .6;
+    }
+
     @keyframes slideInDown {
         from {
             transform: translate3d(0, -100%, 0);
@@ -318,93 +344,68 @@
         }
     }
 
-    .slide-enter-active,
-    .slideIn,
-    .slide-leave-active,
-    .slideOut {
+    .slide-enter-active, .slideIn, .slide-leave-active, .slideOut {
         animation-duration: 1s;
         animation-fill-mode: both;
     }
 
-    .slide-enter-active,
-    .slideIn {
+    .slide-enter-active, .slideIn {
         animation-name: slideIn;
     }
 
-    .slide-leave-active,
-    .slideOut {
+    .slide-leave-active, .slideOut {
         animation-name: slideOut;
     }
 
-    .slideUp-enter-active,
-    .slideInUp,
-    .slideUp-leave-active,
-    .slideOutUp {
+    .slideUp-enter-active, .slideInUp, .slideUp-leave-active, .slideOutUp {
         animation-duration: 1s;
         animation-fill-mode: both;
     }
 
-    .slideUp-enter-active,
-    .slideInUp {
+    .slideUp-enter-active, .slideInUp {
         animation-name: slideInUp;
     }
 
-    .slideUp-leave-active,
-    .slideOutUp {
+    .slideUp-leave-active, .slideOutUp {
         animation-name: slideOutUp;
     }
 
-    .slideRight-enter-active,
-    .slideInRight,
-    .slideRight-leave-active,
-    .slideOutRight {
+    .slideRight-enter-active, .slideInRight, .slideRight-leave-active, .slideOutRight {
         animation-duration: 1s;
         animation-fill-mode: both;
     }
 
-    .slideRight-enter-active,
-    .slideInRight {
+    .slideRight-enter-active, .slideInRight {
         animation-name: slideInRight;
     }
 
-    .slideRight-leave-active,
-    .slideOutRight {
+    .slideRight-leave-active, .slideOutRight {
         animation-name: slideOutRight;
     }
 
-    .slideLeft-enter-active,
-    .slideInLeft,
-    .slideLeft-leave-active,
-    .slideOutLeft {
+    .slideLeft-enter-active, .slideInLeft, .slideLeft-leave-active, .slideOutLeft {
         animation-duration: 1s;
         animation-fill-mode: both;
     }
 
-    .slideLeft-enter-active,
-    .slideInLeft {
+    .slideLeft-enter-active, .slideInLeft {
         animation-name: slideInLeft;
     }
 
-    .slideLeft-leave-active,
-    .slideOutLeft {
+    .slideLeft-leave-active, .slideOutLeft {
         animation-name: slideOutLeft;
     }
 
-    .slideDown-enter-active,
-    .slideInDown,
-    .slideDown-leave-active,
-    .slideOutDown {
+    .slideDown-enter-active, .slideInDown, .slideDown-leave-active, .slideOutDown {
         animation-duration: 1s;
         animation-fill-mode: both;
     }
 
-    .slideDown-enter-active,
-    .slideInDown {
+    .slideDown-enter-active, .slideInDown {
         animation-name: slideInDown;
     }
 
-    .slideDown-leave-active,
-    .slideOutDown {
+    .slideDown-leave-active, .slideOutDown {
         animation-name: slideOutDown;
     }
 </style>

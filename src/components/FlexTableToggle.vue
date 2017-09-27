@@ -1,16 +1,21 @@
 <template>
-    <button class="btn" :class="localValue ? 'btn-primary' : 'btn-outline-primary'" @click="localValue = !localValue">{{label}}</button>
+    <button class="btn mr-1" :class="localValue ? 'btn-primary' : 'btn-outline-primary'" @click="localValue = !localValue">{{label}}</button>
 </template>
 
 <script>
+  import Vue from 'vue'
+
   export default {
     name: 'FlexTableToggle',
-    components: {},
     props: {
       value: {
         default: null
       },
-      label: {required: true, type: String}
+      label: {required: true, type: String},
+      columns: {
+        type: Array,
+        default: () => []
+      }
     },
     data () {
       return {
@@ -27,13 +32,14 @@
       localValue (newVal, oldVal) {
         if (newVal !== oldVal) {
           this.$emit('input', newVal)
+          this.$root.$emit('flex-table-toggle::change', this.label, this.localValue)
         }
       }
     },
     methods: {
       onChange (value, e) {
         this.localValue = !value
-        this.$emit('change', this.localValue)
+        this.$root.$emit('flex-table-toggle::change', this.label, this.localValue)
       }
     },
     mounted () {}
