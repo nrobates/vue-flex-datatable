@@ -10,37 +10,42 @@
 <body>
 <div id="app" class="container-fluid">
     <div class="row">
-        <div class="card mt-5 mb-5">
-            <h4 class="card-header bg-info text-center">Vue Flex Datatable</h4>
-            <div class="card-body">
-                <flex-table :rows="rows" show-filter>
-                    <flex-table-column label="First Name" show="firstName" sortable toggleable toggleable-group="name"
-                                       filterable></flex-table-column>
-                    <flex-table-column label="Last Name" show="lastName" sortable toggleable toggleable-group="name"
-                                       filterable></flex-table-column>
-                    <flex-table-column label="Email" show="email" sortable toggleable toggleable-group="email"
-                                       filterable></flex-table-column>
-                    <flex-table-column label="Nested" show="nested.song" sortable toggleable toggleable-group="nested"
-                                       filterable></flex-table-column>
-                    <flex-table-column label="Phone" show="phone" sortable filterable></flex-table-column>
-                    <flex-table-column label="Actions">
-                        <template scope="row">
-                            <button class="btn btn-sm btn-success">{{row.email}}</button>
-                        </template>
-                    </flex-table-column>
-                </flex-table>
-            </div>
-            <div class="card-footer text-center">
-                <section class="page-about">
-                    <h4 class="page-subtitle">About</h4>
-                    <p>The flexible datatable component above is powered by <a
-                            href="https://github.com/nrobates/vue-flex-datatable">nrobates/vue-flex-datatable</a>.</p>
-                </section>
+        <div class="col-12">
+            <div class="card mt-5 mb-5">
+                <h4 class="card-header bg-info text-center">Vue Flex Datatable</h4>
+                <div class="card-body">
+                    <flex-table :rows="rows" show-filter>
+                        <flex-table-column label="First Name" show="firstName" sortable toggleable
+                                           toggleable-group="name"
+                                           filterable></flex-table-column>
+                        <flex-table-column label="Last Name" show="lastName" sortable toggleable toggleable-group="name"
+                                           filterable></flex-table-column>
+                        <flex-table-column label="Email" show="email" sortable toggleable toggleable-group="email"
+                                           filterable></flex-table-column>
+                        <flex-table-column label="Nested" show="nested.song" sortable toggleable
+                                           toggleable-group="nested"
+                                           filterable></flex-table-column>
+                        <flex-table-column label="Phone" show="phone" sortable filterable></flex-table-column>
+                        <flex-table-column label="Actions">
+                            <template scope="row">
+                                <button class="btn btn-sm btn-success">{{row.email}}</button>
+                            </template>
+                        </flex-table-column>
+                    </flex-table>
+                </div>
+                <div class="card-footer text-center">
+                    <section class="page-about">
+                        <h4 class="page-subtitle">About</h4>
+                        <p>The flexible datatable component above is powered by <a
+                                href="https://github.com/nrobates/vue-flex-datatable">nrobates/vue-flex-datatable</a>.
+                        </p>
+                    </section>
 
-                <small class="page-outro">
-                    <a href="https://github.com/nrobates/vue-flex-datatable">Code on GitHub</a> |
-                    Proudly presented by <a href="http://nrobates.com">nrobates.com</a>
-                </small>
+                    <small class="page-outro">
+                        <a href="https://github.com/nrobates/vue-flex-datatable">Code on GitHub</a> |
+                        Proudly presented by <a href="http://nrobates.com">nrobates.com</a>
+                    </small>
+                </div>
             </div>
         </div>
     </div>
