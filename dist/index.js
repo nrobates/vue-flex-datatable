@@ -19771,7 +19771,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
     props: {
       rows: { default: function _default() {
           return [];
-        }, type: Array },
+        }, type: [Array, Function] },
 
       childRows: { default: false, type: Boolean },
       childRowsKey: { default: null, type: String },
