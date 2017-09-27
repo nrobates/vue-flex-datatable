@@ -55,28 +55,49 @@ new Vue({
     ],
     rows: [
       {
-        name: 'John Doe',
+        firstName: 'John',
+        lastName: 'Doe',
         email: 'johndoe@example.com',
         phone: '222-222-2222',
         nested: {song: 'Done Dirt Cheap'},
         children: [
           {
-            name: 'Max Joshie',
+            firstName: 'Max',
+            lastName: 'Joshie',
             email: 'maxj@example.com',
             phone: '333-333-3333',
             nested: {song: 'Back in Black'}
           },
           {
-            name: 'Josh Max',
+            firstName: 'Josh',
+            lastName: 'Max',
             email: 'jmax@example.com',
             phone: '333-333-3333',
             nested: {song: 'Born to be wild'}
           }
         ]
       },
-      {name: 'Jane Doe', email: 'janedoe@example.com', phone: '222-222-2222', nested: {song: 'Enter Sandman'}},
-      {name: 'Jack Davis', email: 'jackdavis@example.com', phone: '222-222-2222', nested: {song: 'Fire and Ice'}},
-      {name: 'Joan Davis', email: 'joandavis@example.com', phone: '222-222-2222', nested: {song: 'Crackerman'}}
+      {
+        firstName: 'Jane',
+        lastName: 'Doe',
+        email: 'janedoe@example.com',
+        phone: '222-222-2222',
+        nested: {song: 'Enter Sandman'}
+      },
+      {
+        firstName: 'Jack',
+        lastName: 'Davis',
+        email: 'jackdavis@example.com',
+        phone: '222-222-2222',
+        nested: {song: 'Fire and Ice'}
+      },
+      {
+        firstName: 'Joan',
+        lastName: 'Davis',
+        email: 'joandavis@example.com',
+        phone: '222-222-2222',
+        nested: {song: 'Crackerman'}
+      }
     ]
   }
 })

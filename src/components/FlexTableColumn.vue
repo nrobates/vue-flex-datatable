@@ -1,29 +1,39 @@
 <template>
-    <td v-html="columnContent"></td>
+    <!-- Never render the contents -->
+    <!-- The scoped slot won't have the required data -->
+    <div v-if="false">
+        <slot></slot>
+    </div>
 </template>
 
 <script>
-  import _ from 'lodash'
-
   export default {
     name: 'FlexTableColumn',
-    components: {},
     props: {
-      row: {type: Object, required: true},
-      column: {type: Object, required: true}
+      label: {type: String, default: ''},
+      show: {type: String, default: ''},
+      sortable: {type: Boolean, default: false},
+      filterable: {type: Boolean, default: false},
+      toggleable: {type: Boolean, default: false},
+      toggleableGroup: {type: String, default: ''},
+      formatter: {type: Function, default: null},
+      childFormatter: {type: Function, default: null},
+      visible: {type: Boolean, default: true}
     },
-    data: () => ({}),
-    computed: {
-      columnContent () {
-        if (_.isFunction(this.column.formatter)) {
-          return this.column.formatter(_.get(this.row, this.column.show), this.row)
-        }
-        return _.get(this.row, this.column.show)
+    data () {
+      return {
+        isVisible: this.visible
       }
     },
-    watch: {},
-    methods: {},
-    mounted () {},
-    created () {}
+    methods: {
+      checkVisibility (toggleGroup, visible) {
+        if (this.toggleableGroup === toggleGroup) {
+          this.isVisible = visible
+        }
+      }
+    },
+    mounted () {
+      this.$root.$on('flex-table-toggle::change', this.checkVisibility)
+    }
   }
 </script>
