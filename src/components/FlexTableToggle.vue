@@ -1,10 +1,10 @@
 <template>
-    <button class="btn mr-1" :class="localValue ? 'btn-primary' : 'btn-outline-primary'" @click="localValue = !localValue">{{label}}</button>
+    <button class="btn mr-1" :class="localValue ? 'btn-primary' : 'btn-outline-primary'"
+            @click="localValue = !localValue">{{label}}
+    </button>
 </template>
 
 <script>
-  import Vue from 'vue'
-
   export default {
     name: 'FlexTableToggle',
     props: {
