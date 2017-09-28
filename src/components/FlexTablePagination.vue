@@ -35,14 +35,10 @@
         return this.pagination.currentPage || 1
       },
       pageItems () {
-        return this.pagination.totalPages === undefined ? [] : range(1, this.pagination.totalPages + 1)
+        return typeof this.pagination.totalPages === 'undefined' ? [] : range(1, this.pagination.totalPages + 1)
       },
       showPagingElement () {
-        if (!this.pagination) {
-          return false
-        }
-
-        if (this.pagination.totalPages === undefined) {
+        if (typeof this.pagination.totalPages === 'undefined') {
           return false
         }
         if (this.pagination.count === 0) {

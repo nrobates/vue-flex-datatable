@@ -85,7 +85,7 @@
             </tbody>
         </table>
 
-        <flex-table-pagination :pagination="pagination" @changePage="navigateToPage"></flex-table-pagination>
+        <flex-table-pagination :pagination="pagination" @changePage="navigateToPage" v-if="pagination"></flex-table-pagination>
 
         <div style="display: none;">
             <slot></slot>
