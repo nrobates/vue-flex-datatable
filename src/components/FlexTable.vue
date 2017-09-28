@@ -55,8 +55,8 @@
                     <tbody :key="rIndex" :id="'flex-table-row-' + rIndex" class="flex-table-row">
                     <tr>
                         <td>
-                            <a href="#" class="btn btn-sm btn-link" :class="{'disabled': !row[childRowsKey]}"
-                               :disabled="!row[childRowsKey]"
+                            <a href="#" class="btn btn-sm btn-link" :class="{'disabled': !row[childRowKey]}"
+                               :disabled="!row[childRowKey]"
                                @click.prevent="row.showChildren = !row.showChildren"><i
                                     :class="['fa', {'fa-plus-circle': !row.showChildren, 'fa-minus-circle': row.showChildren}]"></i></a>
                         </td>
@@ -67,7 +67,7 @@
                     <transition name="fade">
                         <tbody :id="'flex-table-child-rows-' + rIndex" v-show="row.showChildren"
                                class="flex-table-child-rows">
-                        <tr v-for="(childRow, crIndex) in row[childRowsKey]" :key="crIndex">
+                        <tr v-for="(childRow, crIndex) in row[childRowKey]" :key="crIndex">
                             <td></td>
                             <flex-table-cell v-for="(column, cIndex) in visibleColumns" :key="cIndex" :column="column"
                                              :row="childRow"></flex-table-cell>
@@ -117,7 +117,8 @@
       rows: {default: () => [], type: [Array, Function]},
 
       childRows: {default: false, type: Boolean},
-      childRowsKey: {default: null, type: String},
+      childRowKey: {default: null, type: String},
+      childRowType: {default: 'row', type: String},
 
       showCaption: {default: false, type: Boolean},
       showFilter: {default: false, type: Boolean},
@@ -147,13 +148,15 @@
         order: 'asc'
       },
       pagination: null,
-      localSettings: {},
-      slotObserver: null,
       toggleGroups: []
     }),
     computed: {
+      tableClasses () {
+        return classList('flex-table', this.tableClass)
+      },
+
       columnToggles () {
-        return this.columns.filter(column => column.toggleable)
+        return this.columns.filter(column => column.toggleable === true)
       },
 
       columnToggleGroups () {
@@ -177,11 +180,7 @@
       },
 
       filterableColumns () {
-        return this.visibleColumns.filter(column => column.filterable)
-      },
-
-      tableClasses () {
-        return classList('flex-table', this.tableClass)
+        return this.visibleColumns.filter(column => column.filterable === true)
       },
 
       displayedRows () {
@@ -223,14 +222,13 @@
         })
       }
     },
-    watch: {},
     methods: {
       columnValue (row, column) {
         return _.get(row, column.show)
       },
 
       childRowColumn (row) {
-        return _.get(row, this.childRowsKey)
+        return _.get(row, this.childRowKey)
       },
 
       getColumn (columnName) {
