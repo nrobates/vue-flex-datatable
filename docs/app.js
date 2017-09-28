@@ -11,6 +11,60 @@ new Vue({
   },
 
   data: {
+    sampleFetchData: () => {
+      return {
+        data: [
+          {
+            firstName: 'John',
+            lastName: 'Doe',
+            email: 'johndoe@example.com',
+            phone: '222-222-2222',
+            nested: {song: 'Done Dirt Cheap'},
+            children: [
+              {
+                firstName: 'Max',
+                lastName: 'Joshie',
+                email: 'maxj@example.com',
+                phone: '333-333-3333',
+                nested: {song: 'Back in Black'}
+              },
+              {
+                firstName: 'Josh',
+                lastName: 'Max',
+                email: 'jmax@example.com',
+                phone: '333-333-3333',
+                nested: {song: 'Born to be wild'}
+              }
+            ]
+          },
+          {
+            firstName: 'Jane',
+            lastName: 'Doe',
+            email: 'janedoe@example.com',
+            phone: '222-222-2222',
+            nested: {song: 'Enter Sandman'}
+          },
+          {
+            firstName: 'Jack',
+            lastName: 'Davis',
+            email: 'jackdavis@example.com',
+            phone: '222-222-2222',
+            nested: {song: 'Fire and Ice'}
+          },
+          {
+            firstName: 'Joan',
+            lastName: 'Davis',
+            email: 'joandavis@example.com',
+            phone: '222-222-2222',
+            nested: {song: 'Crackerman'}
+          }
+        ],
+        pagination: {
+          currentPage: 1,
+          totalPages: 3
+        }
+      }
+    },
     showCol1: true,
     showCol2: true,
     showCol3: true,

@@ -19774,7 +19774,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         }, type: [Array, Function] },
 
       childRows: { default: false, type: Boolean },
-      childRowsKey: { default: null, type: String },
+      childRowKey: { default: null, type: String },
+      childRowType: { default: 'row', type: String },
 
       showCaption: { default: false, type: Boolean },
       showFilter: { default: false, type: Boolean },
@@ -19805,15 +19806,16 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           order: 'asc'
         },
         pagination: null,
-        localSettings: {},
-        slotObserver: null,
         toggleGroups: []
       };
     },
     computed: {
+      tableClasses: function tableClasses() {
+        return (0, _helpers.classList)('flex-table', this.tableClass);
+      },
       columnToggles: function columnToggles() {
         return this.columns.filter(function (column) {
-          return column.toggleable;
+          return column.toggleable === true;
         });
       },
       columnToggleGroups: function columnToggleGroups() {
@@ -19843,11 +19845,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       },
       filterableColumns: function filterableColumns() {
         return this.visibleColumns.filter(function (column) {
-          return column.filterable;
+          return column.filterable === true;
         });
-      },
-      tableClasses: function tableClasses() {
-        return (0, _helpers.classList)('flex-table', this.tableClass);
       },
       displayedRows: function displayedRows() {
         var _this2 = this;
@@ -19890,13 +19889,12 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         });
       }
     },
-    watch: {},
     methods: {
       columnValue: function columnValue(row, column) {
         return _lodash2.default.get(row, column.show);
       },
       childRowColumn: function childRowColumn(row) {
-        return _lodash2.default.get(row, this.childRowsKey);
+        return _lodash2.default.get(row, this.childRowKey);
       },
       getColumn: function getColumn(columnName) {
         return this.visibleColumns.find(function (column) {
@@ -24791,11 +24789,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }, [_c('tr', [_c('td', [_c('a', {
       staticClass: "btn btn-sm btn-link",
       class: {
-        'disabled': !row[_vm.childRowsKey]
+        'disabled': !row[_vm.childRowKey]
       },
       attrs: {
         "href": "#",
-        "disabled": !row[_vm.childRowsKey]
+        "disabled": !row[_vm.childRowKey]
       },
       on: {
         "click": function($event) {
@@ -24831,7 +24829,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       attrs: {
         "id": 'flex-table-child-rows-' + rIndex
       }
-    }, _vm._l((row[_vm.childRowsKey]), function(childRow, crIndex) {
+    }, _vm._l((row[_vm.childRowKey]), function(childRow, crIndex) {
       return _c('tr', {
         key: crIndex
       }, [_c('td'), _vm._v(" "), _vm._l((_vm.visibleColumns), function(column, cIndex) {

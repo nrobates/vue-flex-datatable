@@ -1,12 +1,11 @@
 import _ from 'lodash'
-import Vue from 'vue/dist/vue'
+import Vue from 'vue/dist/vue.common'
 import test from 'ava'
 import nextTick from 'p-immediate'
 import FlexTable from '../../src/components/FlexTable.vue'
 import FlexDataTable from '../../src/index'
 
 Vue.use(FlexDataTable)
-
 Vue.config.productionTip = false
 
 test('has a created hook', (t) => {
@@ -19,11 +18,10 @@ test('has data as function', (t) => {
 
 test('sets default data', (t) => {
   t.deepEqual(FlexTable.data(), {
+    rows: [],
     columns: [],
     filter: '',
-    localSettings: {},
     pagination: null,
-    slotObserver: null,
     sort: {fieldName: '', order: 'asc'},
     toggleGroups: []
   })
@@ -107,6 +105,81 @@ test('can display a filter for the table', async (t) => {
 
   const vm = new Vue({
     el: '#app'
+  })
+
+  await nextTick
+
+  t.snapshot(vm.$el.innerHTML)
+})
+
+test('can pass row data as a function', async (t) => {
+  document.body.innerHTML = `
+            <div id="app">
+                <flex-table show-filter
+                    :data="sampleFetchData">
+                    <flex-table-column show="firstName" label="First name"></flex-table-column>
+                </flex-table>
+            </div>
+        `
+
+  const vm = new Vue({
+    el: '#app',
+    data: {
+      sampleFetchData: () => {
+        return {
+          data: [
+            {
+              firstName: 'John',
+              lastName: 'Doe',
+              email: 'johndoe@example.com',
+              phone: '222-222-2222',
+              nested: {song: 'Done Dirt Cheap'},
+              children: [
+                {
+                  firstName: 'Max',
+                  lastName: 'Joshie',
+                  email: 'maxj@example.com',
+                  phone: '333-333-3333',
+                  nested: {song: 'Back in Black'}
+                },
+                {
+                  firstName: 'Josh',
+                  lastName: 'Max',
+                  email: 'jmax@example.com',
+                  phone: '333-333-3333',
+                  nested: {song: 'Born to be wild'}
+                }
+              ]
+            },
+            {
+              firstName: 'Jane',
+              lastName: 'Doe',
+              email: 'janedoe@example.com',
+              phone: '222-222-2222',
+              nested: {song: 'Enter Sandman'}
+            },
+            {
+              firstName: 'Jack',
+              lastName: 'Davis',
+              email: 'jackdavis@example.com',
+              phone: '222-222-2222',
+              nested: {song: 'Fire and Ice'}
+            },
+            {
+              firstName: 'Joan',
+              lastName: 'Davis',
+              email: 'joandavis@example.com',
+              phone: '222-222-2222',
+              nested: {song: 'Crackerman'}
+            }
+          ],
+          pagination: {
+            currentPage: 1,
+            totalPages: 3
+          }
+        }
+      }
+    }
   })
 
   await nextTick

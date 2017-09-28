@@ -85,6 +85,8 @@
             </tbody>
         </table>
 
+        <flex-table-pagination :pagination="pagination" @changePage="navigateToPage"></flex-table-pagination>
+
         <div style="display: none;">
             <slot></slot>
         </div>
@@ -102,10 +104,13 @@
   import FlexTableRow from './FlexTableRow.vue'
   import FlexTableCell from './FlexTableCell.vue'
   import FlexTableToggles from './FlexTableToggles.vue'
+  import FlexTablePagination from './FlexTablePagination.vue'
 
   export default {
     name: 'FlexTable',
+
     components: {
+      FlexTablePagination,
       FlexTableToggles,
       FlexTableCell,
       FlexTableRow,
@@ -113,8 +118,9 @@
       FlexTableColumn,
       FlexTableToggle
     },
+
     props: {
-      rows: {default: () => [], type: [Array, Function]},
+      data: {default: () => [], type: [Array, Function]},
 
       childRows: {default: false, type: Boolean},
       childRowKey: {default: null, type: String},
@@ -140,7 +146,9 @@
 
       toggleLabel: {default: settings.toggleLabel}
     },
+
     data: () => ({
+      rows: [],
       columns: [],
       filter: '',
       sort: {
@@ -150,6 +158,21 @@
       pagination: null,
       toggleGroups: []
     }),
+
+    watch: {
+      data () {
+        if (_.isArray(this.data)) {
+          this.mountData()
+        }
+      },
+
+      filter () {
+        if (!_.isArray(this.data)) {
+          this.mountData()
+        }
+      }
+    },
+
     computed: {
       tableClasses () {
         return classList('flex-table', this.tableClass)
@@ -222,6 +245,7 @@
         })
       }
     },
+
     methods: {
       columnValue (row, column) {
         return _.get(row, column.show)
@@ -255,13 +279,39 @@
 
       mapToggles () {
         this.toggleGroups = [...new Set(this.toggleableColumns.map(col => col.toggleableGroup))]
+      },
+
+      async fetchDataFromServer () {
+        const page = this.pagination && this.pagination.currentPage ? this.pagination.currentPage : 1
+        const response = await this.data({
+          filter: this.filter,
+          sort: this.sort,
+          page: page
+        })
+        this.pagination = response.pagination
+        return response.data
+      },
+
+      async mountData () {
+        this.rows = _.isArray(this.data) ? this.data : await this.fetchDataFromServer()
+      },
+
+      async navigateToPage (page) {
+        this.pagination.currentPage = page
+        await this.mountData()
       }
     },
+
     async mounted () {
       this.mountColumns()
+      await this.mountData()
       await this.mapToggles()
     },
-    created () {}
+
+    created () {
+      this.sort.fieldName = this.sortBy
+      this.sort.order = this.sortOrder
+    }
   }
 </script>
 

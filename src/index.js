@@ -1,10 +1,11 @@
 import { mergeSettings } from './settings'
 import FlexTable from './components/FlexTable.vue'
+import FlexTableCell from './components/FlexTableCell.vue'
 import FlexTableColumn from './components/FlexTableColumn.vue'
 import FlexTableHeaderColumn from './components/FlexTableHeaderColumn.vue'
-import FlexTableToggle from './components/FlexTableToggle.vue'
+import FlexTablePagination from './components/FlexTablePagination.vue'
 import FlexTableRow from './components/FlexTableRow.vue'
-import FlexTableCell from './components/FlexTableCell.vue'
+import FlexTableToggle from './components/FlexTableToggle.vue'
 import FlexTableToggles from './components/FlexTableToggles.vue'
 
 export default {
@@ -16,6 +17,7 @@ export default {
     Vue.component('flex-table-row', FlexTableRow)
     Vue.component('flex-table-toggle', FlexTableToggle)
     Vue.component('flex-table-toggles', FlexTableToggles)
+    Vue.component('flex-table-pagination', FlexTablePagination)
   },
 
   settings (settings) {
@@ -28,6 +30,7 @@ export {
   FlexTableCell,
   FlexTableColumn,
   FlexTableHeaderColumn,
+  FlexTablePagination,
   FlexTableRow,
   FlexTableToggle,
   FlexTableToggles
