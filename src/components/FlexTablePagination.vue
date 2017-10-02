@@ -1,17 +1,17 @@
 <template>
     <nav v-if="showPagingElement">
-        <ul class="flex-table-pagination pagination justify-content-end">
+        <ul class="flex-table-pagination pagination justify-content-end pb-0 mb-0">
             <li class="page-item" :class="{'disabled' : !hasPreviousPage}">
-                <a class="page-link" href="#" aria-label="Previous">
+                <a class="page-link" href="#" aria-label="Previous" @click.prevent="selectPage(currentPage - 1)">
                     <span aria-hidden="true">&laquo;</span>
                     <span class="sr-only">Previous</span>
                 </a>
             </li>
             <li class="page-item" :class="{ active: isPageActive(page) }" v-for="page in pageItems">
-                <a class="page-link" @click="selectPage(page)">{{ page }}</a>
+                <a class="page-link" href="#" @click.prevent="selectPage(page)">{{ page }}</a>
             </li>
             <li class="page-item" :class="{'disabled' : !hasNextPage}">
-                <a class="page-link" href="#" aria-label="Next">
+                <a class="page-link" href="#" aria-label="Next" @click.prevent="selectPage(currentPage + 1)">
                     <span aria-hidden="true">&raquo;</span>
                     <span class="sr-only">Next</span>
                 </a>

@@ -11,32 +11,27 @@
                 </slot>
             </div>
             <div class="col-12 col-md-6 mb-2 text-center flex-table-filter-wrapper" v-show="showFilter">
-                <input
-                        :class="filterInputClass"
-                        type="text"
-                        v-model="filter"
+                <flex-table-filter
                         :placeholder="filterPlaceholder"
-                >
-                <a
-                        v-if="filter"
-                        @click="filter = ''"
-                        class="table-component__filter__clear"
-                >×</a>
+                        :inputClass="filterInputClass"
+                        v-model="filter"
+                ></flex-table-filter>
             </div>
-            <div class="col-12 col-md-6 mb-2 align-content-center flex-table-toggles-wrapper"
-                 v-show="columnToggles.length">
-                <flex-table-toggles :label="toggleLabel" :toggles="columnToggleGroups"
-                                    class="mr-1"></flex-table-toggles>
+            <div class="col-12 col-md-6 mb-2 align-content-center flex-table-toggles-wrapper" v-show="columnToggles.length">
+                <flex-table-toggles
+                        :label="toggleLabel"
+                        :toggles="columnToggleGroups"
+                        class="mr-1"
+                ></flex-table-toggles>
 
             </div>
             <div class="col-12 col-md-6 mb-2 text-right align-content-center flex-table-group-by-wrapper"
                  v-show="showGroupBy">
                 <span><strong>Group By: </strong></span>
-
             </div>
         </div>
 
-        <table :class="tableClasses">
+        <table :class="tableClasses" :aria-busy="isBusy">
             <thead>
             <tr>
                 <td v-if="childRows"></td>
@@ -50,42 +45,58 @@
             </tr>
             </thead>
 
-            <template v-if="childRows">
-                <template v-for="(row, rIndex) in displayedRows">
-                    <tbody :key="rIndex" :id="'flex-table-row-' + rIndex" class="flex-table-row">
-                    <tr>
-                        <td>
-                            <a href="#" class="btn btn-sm btn-link" :class="{'disabled': !row[childRowKey]}"
-                               :disabled="!row[childRowKey]"
-                               @click.prevent="row.showChildren = !row.showChildren"><i
-                                    :class="['fa', {'fa-plus-circle': !row.showChildren, 'fa-minus-circle': row.showChildren}]"></i></a>
-                        </td>
-                        <flex-table-cell v-for="(column, cIndex) in visibleColumns" :key="cIndex" :column="column"
-                                         :row="row"></flex-table-cell>
-                    </tr>
-                    </tbody>
-                    <transition name="fade">
-                        <tbody :id="'flex-table-child-rows-' + rIndex" v-show="row.showChildren"
-                               class="flex-table-child-rows">
-                        <tr v-for="(childRow, crIndex) in row[childRowKey]" :key="crIndex">
-                            <td></td>
+            <template v-if="rows.length">
+                <template v-if="childRows">
+                    <template v-for="(row, rIndex) in displayedRows">
+                        <tbody :key="rIndex" :id="'flex-table-row-' + rIndex" class="flex-table-row">
+                        <tr>
+                            <td>
+                                <a href="#" class="btn btn-sm btn-link" :class="{'disabled': !row[childRowKey]}"
+                                   :disabled="!row[childRowKey]"
+                                   @click.prevent="row.showChildren = !row.showChildren"><i
+                                        :class="['fa', {'fa-plus-circle': !row.showChildren, 'fa-minus-circle': row.showChildren}]"></i></a>
+                            </td>
                             <flex-table-cell v-for="(column, cIndex) in visibleColumns" :key="cIndex" :column="column"
-                                             :row="childRow"></flex-table-cell>
+                                             :row="row"></flex-table-cell>
                         </tr>
                         </tbody>
-                    </transition>
+                        <transition name="fade">
+                            <tbody :id="'flex-table-child-rows-' + rIndex" v-show="row.showChildren"
+                                   class="flex-table-child-rows">
+                            <tr v-for="(childRow, crIndex) in row[childRowKey]" :key="crIndex">
+                                <td></td>
+                                <flex-table-cell v-for="(column, cIndex) in visibleColumns" :key="cIndex"
+                                                 :column="column"
+                                                 :row="childRow"></flex-table-cell>
+                            </tr>
+                            </tbody>
+                        </transition>
+                    </template>
                 </template>
+
+                <tbody v-else>
+                <tr v-for="(row, rIndex) in displayedRows" :key="rIndex">
+                    <flex-table-cell v-for="(column, cIndex) in visibleColumns" :key="cIndex" :column="column"
+                                     :row="row"></flex-table-cell>
+                </tr>
+                </tbody>
             </template>
 
             <tbody v-else>
-            <tr v-for="(row, rIndex) in displayedRows" :key="rIndex">
-                <flex-table-cell v-for="(column, cIndex) in visibleColumns" :key="cIndex" :column="column"
-                                 :row="row"></flex-table-cell>
+            <tr>
+                <td :colspan="columns.length" class="flex-table-no-data text-center">There are currently no records</td>
             </tr>
             </tbody>
         </table>
 
-        <flex-table-pagination :pagination="pagination" @changePage="navigateToPage" v-if="pagination"></flex-table-pagination>
+        <div class="row">
+            <div class="col text-right align-self-center pr-0">
+                <span class="fa fa-circle-o-notch fa-spin" v-if="isBusy"></span>
+            </div>
+            <div class="col-auto justify-content-end">
+                <flex-table-pagination v-if="pagination" :pagination="pagination" @changePage="navigateToPage"></flex-table-pagination>
+            </div>
+        </div>
 
         <div style="display: none;">
             <slot></slot>
@@ -105,11 +116,13 @@
   import FlexTableCell from './FlexTableCell.vue'
   import FlexTableToggles from './FlexTableToggles.vue'
   import FlexTablePagination from './FlexTablePagination.vue'
+  import FlexTableFilter from './FlexTableFilter.vue'
 
   export default {
     name: 'FlexTable',
 
     components: {
+      FlexTableFilter,
       FlexTablePagination,
       FlexTableToggles,
       FlexTableCell,
@@ -156,7 +169,8 @@
         order: 'asc'
       },
       pagination: null,
-      toggleGroups: []
+      toggleGroups: [],
+      isBusy: false
     }),
 
     watch: {
@@ -164,18 +178,12 @@
         if (_.isArray(this.data)) {
           this.mountData()
         }
-      },
-
-      filter () {
-        if (!_.isArray(this.data)) {
-          this.mountData()
-        }
       }
     },
 
     computed: {
       tableClasses () {
-        return classList('flex-table', this.tableClass)
+        return classList('flex-table', this.tableClass, this.isBusy ? 'flex-table-loading' : '')
       },
 
       columnToggles () {
@@ -293,7 +301,9 @@
       },
 
       async mountData () {
+        this.isBusy = true
         this.rows = _.isArray(this.data) ? this.data : await this.fetchDataFromServer()
+        this.isBusy = false
       },
 
       async navigateToPage (page) {
@@ -316,13 +326,38 @@
 </script>
 
 <style lang="scss" scoped>
+    .flex-table {
+        position: relative;
+    }
+
+    .flex-table tbody {
+        min-height: 100px;
+        position: relative;
+    }
+
+    .flex-table-loader {
+        position: absolute;
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        z-index: 2000;
+
+        .flex-table-loader-content {
+            align-self: center;
+            font-size: 10px;
+            align-content: center;
+            justify-self: center;
+        }
+    }
+
     /* Busy table styling */
     .flex-table[aria-busy="false"] {
         opacity: 1;
     }
 
     .flex-table[aria-busy="true"] {
-        opacity: .6;
+        opacity: .4;
     }
 
     @keyframes slideInDown {

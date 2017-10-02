@@ -18,7 +18,9 @@
       toggleableGroup: {type: String, default: ''},
       formatter: {type: Function, default: null},
       childFormatter: {type: Function, default: null},
-      visible: {type: Boolean, default: true}
+      visible: {type: Boolean, default: true},
+      columnClass: {type: String, default: ''},
+      columnStyles: {type: Object, default: () => {}}
     },
     data () {
       return {

@@ -14,13 +14,11 @@
             <div class="card mt-5 mb-5">
                 <h4 class="card-header bg-info text-center">Vue Flex Datatable</h4>
                 <div class="card-body">
-                    <flex-table :data="sampleFetchData" show-filter toggle-label="Column Toggles:">
-                        <flex-table-column label="">
+                    <flex-table :data="fetchData" show-filter toggle-label="Column Toggles:">
+                        <flex-table-column label="" column-class="text-center align-content-center justify-content-center" :column-styles="{width: '20px'}">
                             <template scope="row">
-                                <label class="custom-control custom-checkbox">
-                                    <input type="checkbox" class="custom-control-input">
-                                    <span class="custom-control-indicator"></span>
-                                    <span class="custom-control-description"></span>
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="checkbox" value="">
                                 </label>
                             </template>
                         </flex-table-column>
@@ -29,9 +27,10 @@
                         <flex-table-column label="Email" show="email" sortable toggleable toggleable-group="email" filterable></flex-table-column>
                         <flex-table-column label="Nested" show="nested.song" sortable toggleable toggleable-group="nested" filterable></flex-table-column>
                         <flex-table-column label="Phone" show="phone" sortable filterable></flex-table-column>
-                        <flex-table-column label="Actions">
+                        <flex-table-column label="Actions" :column-styles="{width: '100px'}">
                             <template scope="row">
-                                <button class="btn btn-sm btn-success"><i class="fa fa-plus"></i> </button>
+                                <button class="btn btn-success btn-sm"><i class="fa fa-plus"></i></button>
+                                <button class="btn btn-danger btn-sm"><i class="fa fa-remove"></i></button>
                             </template>
                         </flex-table-column>
                     </flex-table>

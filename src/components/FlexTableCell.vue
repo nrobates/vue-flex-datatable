@@ -7,6 +7,15 @@
     props: ['column', 'row'],
     render (createElement, {props}) {
       const data = {}
+
+      if (props.column.columnClass) {
+        data.class = props.column.columnClass
+      }
+
+      if (props.column.columnStyles) {
+        data.style = props.column.columnStyles
+      }
+
       if (typeof props.column.$scopedSlots.default !== 'undefined') {
         return createElement('td', data, props.column.$scopedSlots.default(props.row))
       }

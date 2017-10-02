@@ -5,6 +5,7 @@
         :aria-sort="ariaSort"
         :aria-disabled="ariaDisabled"
         :class="headerClasses"
+        :style="columnStyles"
     >
         {{label}}
     </th>
@@ -46,12 +47,21 @@
       },
       headerClasses () {
         if (typeof this.column.sortable === 'undefined' || this.column.sortable === false) {
-          return classList('flex-table-column-header')
+          return classList('flex-table-column-header', this.column.columnClass)
         }
         if (this.column.show !== this.sort.fieldName) {
-          return classList('flex-table-column-header flex-table-column-sort')
+          return classList('flex-table-column-header flex-table-column-sort', this.column.columnClass)
         }
-        return classList(`flex-table-column-header flex-table-column-sort flex-table-column-sort-${this.sort.order}`)
+        return classList(`flex-table-column-header flex-table-column-sort flex-table-column-sort-${this.sort.order}`, this.column.columnClass)
+      },
+      columnStyles () {
+        let styles = ''
+        if (this.column.columnStyles) {
+          for (var key in this.column.columnStyles) {
+            styles += `${key}: ${this.column.columnStyles[key]};`
+          }
+        }
+        return styles
       }
     },
     methods: {
@@ -70,6 +80,7 @@
         padding-right: 1.5em;
         cursor: pointer;
     }
+
     .flex-table-column-header.flex-table-column-sort:before,
     .flex-table-column-header.flex-table-column-sort:after,
     .flex-table-column-footer.flex-table-column-sort:before,
@@ -82,16 +93,19 @@
         font-size: 80%;
         line-height: 140%
     }
+
     .flex-table-column-header.flex-table-column-sort:before,
     .flex-table-column-footer.flex-table-column-sort:before {
         right: 0.90em;
         content: "\2191";
     }
+
     .flex-table-column-header.flex-table-column-sort:after,
     .flex-table-column-footer.flex-table-column-sort:after {
         right: 0.25em;
         content: "\2193";
     }
+
     .flex-table-column-header.flex-table-column-sort-asc:after,
     .flex-table-column-header.flex-table-column-sort-desc:before,
     .flex-table-column-footer.flex-table-column-sort-asc:after,

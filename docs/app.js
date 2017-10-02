@@ -11,60 +11,6 @@ new Vue({
   },
 
   data: {
-    sampleFetchData: () => {
-      return {
-        data: [
-          {
-            firstName: 'John',
-            lastName: 'Doe',
-            email: 'johndoe@example.com',
-            phone: '222-222-2222',
-            nested: {song: 'Done Dirt Cheap'},
-            children: [
-              {
-                firstName: 'Max',
-                lastName: 'Joshie',
-                email: 'maxj@example.com',
-                phone: '333-333-3333',
-                nested: {song: 'Back in Black'}
-              },
-              {
-                firstName: 'Josh',
-                lastName: 'Max',
-                email: 'jmax@example.com',
-                phone: '333-333-3333',
-                nested: {song: 'Born to be wild'}
-              }
-            ]
-          },
-          {
-            firstName: 'Jane',
-            lastName: 'Doe',
-            email: 'janedoe@example.com',
-            phone: '222-222-2222',
-            nested: {song: 'Enter Sandman'}
-          },
-          {
-            firstName: 'Jack',
-            lastName: 'Davis',
-            email: 'jackdavis@example.com',
-            phone: '222-222-2222',
-            nested: {song: 'Fire and Ice'}
-          },
-          {
-            firstName: 'Joan',
-            lastName: 'Davis',
-            email: 'joandavis@example.com',
-            phone: '222-222-2222',
-            nested: {song: 'Crackerman'}
-          }
-        ],
-        pagination: {
-          currentPage: 1,
-          totalPages: 3
-        }
-      }
-    },
     showCol1: true,
     showCol2: true,
     showCol3: true,
@@ -153,5 +99,108 @@ new Vue({
         nested: {song: 'Crackerman'}
       }
     ]
+  },
+  methods: {
+    async fetchData ({page, filter, sort}) {
+      let page1 = {
+        data: [
+          {
+            firstName: 'John',
+            lastName: 'Doe',
+            email: 'johndoe@example.com',
+            phone: '222-222-2222',
+            nested: {song: 'Done Dirt Cheap'},
+            children: [
+              {
+                firstName: 'Max',
+                lastName: 'Joshie',
+                email: 'maxj@example.com',
+                phone: '333-333-3333',
+                nested: {song: 'Back in Black'}
+              },
+              {
+                firstName: 'Josh',
+                lastName: 'Max',
+                email: 'jmax@example.com',
+                phone: '333-333-3333',
+                nested: {song: 'Born to be wild'}
+              }
+            ]
+          },
+          {
+            firstName: 'Jane',
+            lastName: 'Doe',
+            email: 'janedoe@example.com',
+            phone: '222-222-2222',
+            nested: {song: 'Enter Sandman'}
+          },
+          {
+            firstName: 'Jack',
+            lastName: 'Davis',
+            email: 'jackdavis@example.com',
+            phone: '222-222-2222',
+            nested: {song: 'Fire and Ice'}
+          },
+          {
+            firstName: 'Joan',
+            lastName: 'Davis',
+            email: 'joandavis@example.com',
+            phone: '222-222-2222',
+            nested: {song: 'Crackerman'}
+          }
+        ],
+        pagination: {
+          currentPage: 1,
+          totalPages: 2
+        }
+      }
+
+      let page2 = {
+        data: [
+          {
+            firstName: 'Mitch',
+            lastName: 'Campbell',
+            email: 'mitchc@example.com',
+            phone: '444-222-3333',
+            nested: {song: 'Ice Ice Baby'},
+            children: []
+          },
+          {
+            firstName: 'Jackie',
+            lastName: 'Dot',
+            email: 'jackiedot@example.com',
+            phone: '222-222-2222',
+            nested: {song: 'Enter Sandman'},
+            children: []
+          },
+          {
+            firstName: 'Jervis',
+            lastName: 'Jefferson',
+            email: 'jj@example.com',
+            phone: '444-444-4444',
+            nested: {song: 'Fire and Ice'},
+            children: []
+          }
+        ],
+        pagination: {
+          currentPage: 2,
+          totalPages: 2
+        }
+      }
+
+      const $myHttp = {
+        get (url, page) {
+          let data
+          if (page === 2) {
+            data = page2
+          } else {
+            data = page1
+          }
+          return new Promise(resolve => setTimeout(() => resolve(data), 3000))
+        }
+      }
+      let response = await $myHttp.get('http://api.randomuser.me/', page)
+      return response
+    }
   }
 })

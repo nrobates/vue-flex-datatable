@@ -11,11 +11,7 @@
       value: {
         default: null
       },
-      label: {required: true, type: String},
-      columns: {
-        type: Array,
-        default: () => []
-      }
+      label: {required: true, type: String}
     },
     data () {
       return {
