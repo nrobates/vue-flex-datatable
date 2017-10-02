@@ -19959,7 +19959,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           return _this2.visibleColumns.filter(function (column) {
             return column._props.filterable === true;
           }).map(function (column) {
-            return _lodash2.default.get(row, column._props.show).toString().toLowerCase();
+            return _lodash2.default.get(row, column._props.show) ? _lodash2.default.get(row, column._props.show).toString().toLowerCase() : '';
           }).filter(function (filteredValue) {
             return filteredValue.includes(_this2.filter.toLowerCase());
           }).length;
