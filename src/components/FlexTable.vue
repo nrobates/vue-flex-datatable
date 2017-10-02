@@ -224,7 +224,7 @@
         return this.sortedRows.filter((row) => {
           return this.visibleColumns
             .filter(column => column._props.filterable === true)
-            .map(column => _.get(row, column._props.show).toString().toLowerCase())
+            .map(column => _.get(row, column._props.show) ? _.get(row, column._props.show).toString().toLowerCase() : '')
             .filter((filteredValue) => {
               return filteredValue.includes(this.filter.toLowerCase())
             })
