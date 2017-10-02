@@ -75,78 +75,37 @@
 </script>
 
 <style lang="scss" scoped>
-    .flex-table-column-header.flex-table-column-sort,
-    .flex-table-column-footer.flex-table-column-sort {
-        padding-right: 1.5em;
-        cursor: pointer;
-    }
+    .flex-table-column-header {
+        position: relative;
 
-    .flex-table-column-header.flex-table-column-sort:before,
-    .flex-table-column-header.flex-table-column-sort:after,
-    .flex-table-column-footer.flex-table-column-sort:before,
-    .flex-table-column-footer.flex-table-column-sort:after {
-        position: absolute;
-        bottom: 0;
-        display: block;
-        opacity: 0.4;
-        padding-bottom: inherit;
-        font-size: 80%;
-        line-height: 140%
-    }
-
-    .flex-table-column-header.flex-table-column-sort:before,
-    .flex-table-column-footer.flex-table-column-sort:before {
-        right: 0.90em;
-        content: "\2191";
-    }
-
-    .flex-table-column-header.flex-table-column-sort:after,
-    .flex-table-column-footer.flex-table-column-sort:after {
-        right: 0.25em;
-        content: "\2193";
-    }
-
-    .flex-table-column-header.flex-table-column-sort-asc:after,
-    .flex-table-column-header.flex-table-column-sort-desc:before,
-    .flex-table-column-footer.flex-table-column-sort-asc:after,
-    .flex-table-column-footer.flex-table-column-sort-desc:before {
-        opacity: 1;
-    }
-
-    /*.flex-table-column-header {
-        .flex-table-column-sort-actions {
-            position: absolute;
-            right: 0;
-            display: inline-block;
-        }
         &.flex-table-column-sort {
-            text-decoration: none;
+            padding-right: 1.5em;
             cursor: pointer;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
 
-            &.flex-table-column-sort:after,
-            &.flex-table-column-sort:after {
+            &:before,
+            &:after {
                 position: absolute;
-                right: .25em;
-                display: inline-block;
-                color: #ccc;
+                bottom: 1px;
+                display: block;
+                opacity: 0.4;
+                padding-bottom: inherit;
+                font-size: 80%;
             }
 
-            &.flex-table-column-sort-asc:after,
-            &.flex-table-column-sort-desc:after {
-                color: #bbb;
+            &:before {
+                right: 0.90em;
+                content: "\2191";
             }
 
-            &.flex-table-column-sort-asc:after {
-                content: '↑';
-            }
-
-            &.flex-table-column-sort-desc:after {
-                content: '↓';
+            &:after {
+                right: 0.25em;
+                content: "\2193";
             }
         }
-    }*/
+
+        &.flex-table-column-sort-asc:after,
+        &.flex-table-column-sort-desc:before {
+            opacity: 1;
+        }
+    }
 </style>

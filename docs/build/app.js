@@ -30496,7 +30496,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           return _this2.visibleColumns.filter(function (column) {
             return column._props.filterable === true;
           }).map(function (column) {
-            return _lodash2.default.get(row, column._props.show).toString().toLowerCase();
+            return _lodash2.default.get(row, column._props.show) ? _lodash2.default.get(row, column._props.show).toString().toLowerCase() : '';
           }).filter(function (filteredValue) {
             return filteredValue.includes(_this2.filter.toLowerCase());
           }).length;
@@ -32494,7 +32494,7 @@ exports = module.exports = __webpack_require__(77)(undefined);
 
 
 // module
-exports.push([module.i, ".flex-table-column-footer.flex-table-column-sort[data-v-cebca05a],.flex-table-column-header.flex-table-column-sort[data-v-cebca05a]{padding-right:1.5em;cursor:pointer}.flex-table-column-footer.flex-table-column-sort[data-v-cebca05a]:after,.flex-table-column-footer.flex-table-column-sort[data-v-cebca05a]:before,.flex-table-column-header.flex-table-column-sort[data-v-cebca05a]:after,.flex-table-column-header.flex-table-column-sort[data-v-cebca05a]:before{position:absolute;bottom:0;display:block;opacity:.4;padding-bottom:inherit;font-size:80%;line-height:140%}.flex-table-column-footer.flex-table-column-sort[data-v-cebca05a]:before,.flex-table-column-header.flex-table-column-sort[data-v-cebca05a]:before{right:.9em;content:\"\\2191\"}.flex-table-column-footer.flex-table-column-sort[data-v-cebca05a]:after,.flex-table-column-header.flex-table-column-sort[data-v-cebca05a]:after{right:.25em;content:\"\\2193\"}.flex-table-column-footer.flex-table-column-sort-asc[data-v-cebca05a]:after,.flex-table-column-footer.flex-table-column-sort-desc[data-v-cebca05a]:before,.flex-table-column-header.flex-table-column-sort-asc[data-v-cebca05a]:after,.flex-table-column-header.flex-table-column-sort-desc[data-v-cebca05a]:before{opacity:1}", ""]);
+exports.push([module.i, ".flex-table-column-header[data-v-cebca05a]{position:relative}.flex-table-column-header.flex-table-column-sort[data-v-cebca05a]{padding-right:1.5em;cursor:pointer}.flex-table-column-header.flex-table-column-sort[data-v-cebca05a]:after,.flex-table-column-header.flex-table-column-sort[data-v-cebca05a]:before{position:absolute;bottom:1px;display:block;opacity:.4;padding-bottom:inherit;font-size:80%}.flex-table-column-header.flex-table-column-sort[data-v-cebca05a]:before{right:.9em;content:\"\\2191\"}.flex-table-column-header.flex-table-column-sort[data-v-cebca05a]:after{right:.25em;content:\"\\2193\"}.flex-table-column-header.flex-table-column-sort-asc[data-v-cebca05a]:after,.flex-table-column-header.flex-table-column-sort-desc[data-v-cebca05a]:before{opacity:1}", ""]);
 
 // exports
 
