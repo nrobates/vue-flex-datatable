@@ -11,6 +11,8 @@ new Vue({
   },
 
   data: {
+    searchBy: '',
+    activeSearch: '',
     showCol1: true,
     showCol2: true,
     showCol3: true,
@@ -101,7 +103,7 @@ new Vue({
     ]
   },
   methods: {
-    async fetchData ({page, filter, sort}) {
+    async fetchData ({search, page, filter, sort}) {
       let page1 = {
         data: [
           {
