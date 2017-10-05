@@ -3,11 +3,7 @@
         <div class="row">
             <div class="col-12 col-md-6 mb-2 text-center flex-table-search-wrapper" v-show="showSearch">
                 <slot name="search">
-                    <input
-                            :class="filterInputClass"
-                            type="text"
-                            placeholder="Search"
-                    >
+                    <flex-table-search v-model="localSearch" :disableSearch="isBusy" @submit="doSearch"></flex-table-search>
                 </slot>
             </div>
             <div class="col-12 col-md-6 mb-2 text-center flex-table-filter-wrapper" v-show="showFilter">
@@ -117,11 +113,13 @@
   import FlexTableToggles from './FlexTableToggles.vue'
   import FlexTablePagination from './FlexTablePagination.vue'
   import FlexTableFilter from './FlexTableFilter.vue'
+  import FlexTableSearch from './FlexTableSearch.vue'
 
   export default {
     name: 'FlexTable',
 
     components: {
+      FlexTableSearch,
       FlexTableFilter,
       FlexTablePagination,
       FlexTableToggles,
@@ -148,6 +146,12 @@
       filterInputClass: {default: settings.filterInputClass},
       filterNoResults: {default: settings.filterNoResults},
 
+      searchBy: {default: '', type: String},
+      searchServerQueryStringKey: {default: 'query', type: String},
+      searchPlaceholder: {default: settings.searchPlaceholder},
+      searchInputClass: {default: settings.searchInputClass},
+      searchNoResults: {default: settings.searchNoResults},
+
       sortBy: {default: '', type: String},
       sortOrder: {default: '', type: String},
 
@@ -160,23 +164,39 @@
       toggleLabel: {default: settings.toggleLabel}
     },
 
-    data: () => ({
-      rows: [],
-      columns: [],
-      filter: '',
-      sort: {
-        fieldName: '',
-        order: 'asc'
-      },
-      pagination: null,
-      toggleGroups: [],
-      isBusy: false
-    }),
+    data () {
+      return {
+        rows: [],
+        columns: [],
+        filter: '',
+        sort: {
+          fieldName: '',
+          order: 'asc'
+        },
+        pagination: null,
+        toggleGroups: [],
+        isBusy: false,
+
+        // Search related data
+        localSearch: this.searchBy
+      }
+    },
 
     watch: {
       data () {
         if (_.isArray(this.data)) {
           this.mountData()
+        }
+      },
+      searchBy (newVal, oldVal) {
+        if (newVal !== oldVal) {
+          this.localSearch = newVal
+          this.doSearch()
+        }
+      },
+      localSearch (newVal, oldVal) {
+        if (newVal !== oldVal) {
+          this.$emit('input', newVal)
         }
       }
     },
@@ -248,13 +268,16 @@
 
       tableRows () {
         return this.rows.map((row) => {
-          Vue.set(row, 'showChildren', false)
+          row.showChildren = false
           return row
         })
       }
     },
 
     methods: {
+      async doSearch () {
+        await this.mountData()
+      },
       columnValue (row, column) {
         return _.get(row, column.show)
       },
@@ -292,6 +315,7 @@
       async fetchDataFromServer () {
         const page = this.pagination && this.pagination.currentPage ? this.pagination.currentPage : 1
         const response = await this.data({
+          search: this.localSearch,
           filter: this.filter,
           sort: this.sort,
           page: page
@@ -302,7 +326,16 @@
 
       async mountData () {
         this.isBusy = true
-        this.rows = _.isArray(this.data) ? this.data : await this.fetchDataFromServer()
+        const data = _.isArray(this.data) ? this.data : await this.fetchDataFromServer()
+
+        // Map the data to add unique row id to each row
+        // and also to prevent affecting Vuex state management
+        let rowId = 0
+        this.rows = data.map(row => {
+          row.flexTableRowId = rowId++
+          return row
+        })
+
         this.isBusy = false
       },
 

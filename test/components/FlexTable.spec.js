@@ -16,18 +16,6 @@ test('has data as function', (t) => {
   t.true(_.isFunction(FlexTable.data))
 })
 
-test('sets default data', (t) => {
-  t.deepEqual(FlexTable.data(), {
-    rows: [],
-    columns: [],
-    filter: '',
-    pagination: null,
-    sort: {fieldName: '', order: 'asc'},
-    toggleGroups: [],
-    isBusy: false
-  })
-})
-
 test('can be mounted', async (t) => {
   document.body.innerHTML = `
             <div id="app">

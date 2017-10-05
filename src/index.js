@@ -6,6 +6,7 @@ import FlexTableFilter from './components/FlexTableFilter.vue'
 import FlexTableHeaderColumn from './components/FlexTableHeaderColumn.vue'
 import FlexTablePagination from './components/FlexTablePagination.vue'
 import FlexTableRow from './components/FlexTableRow.vue'
+import FlexTableSearch from './components/FlexTableSearch.vue'
 import FlexTableToggle from './components/FlexTableToggle.vue'
 import FlexTableToggles from './components/FlexTableToggles.vue'
 
@@ -17,6 +18,7 @@ export default {
     Vue.component('flex-table-filter', FlexTableFilter)
     Vue.component('flex-table-header-column', FlexTableHeaderColumn)
     Vue.component('flex-table-row', FlexTableRow)
+    Vue.component('flex-table-search', FlexTableSearch)
     Vue.component('flex-table-toggle', FlexTableToggle)
     Vue.component('flex-table-toggles', FlexTableToggles)
     Vue.component('flex-table-pagination', FlexTablePagination)
@@ -35,6 +37,7 @@ export {
   FlexTableHeaderColumn,
   FlexTablePagination,
   FlexTableRow,
+  FlexTableSearch,
   FlexTableToggle,
   FlexTableToggles
 }
