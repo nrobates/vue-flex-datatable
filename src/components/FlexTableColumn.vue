@@ -20,7 +20,10 @@
       childFormatter: {type: Function, default: null},
       visible: {type: Boolean, default: true},
       columnClass: {type: String, default: ''},
-      columnStyles: {type: Object, default: () => {}}
+      columnStyles: {type: Object, default: () => {}},
+      rowGroup: {type: Boolean, default: false},
+      rowGroupOrder: {type: Number, default: 0},
+      rowGroupLabel: {type: String, default: null}
     },
     data () {
       return {
@@ -28,8 +31,8 @@
       }
     },
     methods: {
-      checkVisibility (toggleGroup, visible) {
-        if (this.toggleableGroup === toggleGroup) {
+      checkVisibility (toggleGroup, visible, type) {
+        if (this.toggleableGroup === toggleGroup && type === 'column') {
           this.isVisible = visible
         }
       }

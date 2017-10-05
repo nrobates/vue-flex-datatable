@@ -17,7 +17,8 @@
                         v-model="filter"
                 ></flex-table-filter>
             </div>
-            <div class="col-12 col-md-6 mb-2 align-content-center flex-table-toggles-wrapper" v-show="columnToggles.length">
+            <div class="col-12 col-md-6 mb-2 align-content-center flex-table-toggles-wrapper"
+                 v-show="columnToggles.length">
                 <flex-table-toggles
                         :label="toggleLabel"
                         :toggles="columnToggleGroups"
@@ -27,7 +28,11 @@
             </div>
             <div class="col-12 col-md-6 mb-2 text-right align-content-center flex-table-group-by-wrapper"
                  v-show="showGroupBy">
-                <span><strong>Group By: </strong></span>
+                <flex-table-toggles
+                        label="Group By: "
+                        :toggles="groupByToggles"
+                        class="mr-1"
+                ></flex-table-toggles>
             </div>
         </div>
 
@@ -45,15 +50,22 @@
             </tr>
             </thead>
 
-            <template v-if="rows.length">
-                <template v-if="childRows">
-                    <template v-for="(row, rIndex) in displayedRows">
-                        <tbody :key="rIndex" :id="'flex-table-row-' + rIndex" class="flex-table-row">
+            <template v-if="displayedRows.length">
+                <template v-if="hasCollapsibleRows">
+                    <template v-for="row in displayedRows">
+                        <flex-table-group :data="row" :columns="visibleColumns"></flex-table-group>
+                        <flex-table-group :parent="row"
+                                          :data="row.isGroup === true ? row.groupedRows : row[childRowKey]"
+                                          :columns="visibleColumns"
+                                          v-if="row.isGroup && row.groupedRows || !row.isGroup && row[childRowKey]"></flex-table-group>
+
+                        <!--<tbody :key="row.flexTableRowId" :id="'flex-table-row-' + row.flexTableRowId"
+                               class="flex-table-row">
                         <tr>
                             <td>
                                 <a href="#" class="btn btn-sm btn-link" :class="{'disabled': !row[childRowKey]}"
                                    :disabled="!row[childRowKey]"
-                                   @click.prevent="row.showChildren = !row.showChildren"><i
+                                   @click.prevent="toggleChildrenVisible(row.flexTableRowId)"><i
                                         :class="['fa', {'fa-plus-circle': !row.showChildren, 'fa-minus-circle': row.showChildren}]"></i></a>
                             </td>
                             <flex-table-cell v-for="(column, cIndex) in visibleColumns" :key="cIndex" :column="column"
@@ -61,7 +73,8 @@
                         </tr>
                         </tbody>
                         <transition name="fade">
-                            <tbody :id="'flex-table-child-rows-' + rIndex" v-show="row.showChildren"
+                            <tbody :id="'flex-table-child-rows-' + rIndex"
+                                   v-show="isChildrenVisible(row.flexTableRowId)"
                                    class="flex-table-child-rows">
                             <tr v-for="(childRow, crIndex) in row[childRowKey]" :key="crIndex">
                                 <td></td>
@@ -70,7 +83,7 @@
                                                  :row="childRow"></flex-table-cell>
                             </tr>
                             </tbody>
-                        </transition>
+                        </transition>-->
                     </template>
                 </template>
 
@@ -94,7 +107,8 @@
                 <span class="fa fa-circle-o-notch fa-spin" v-if="isBusy"></span>
             </div>
             <div class="col-auto justify-content-end">
-                <flex-table-pagination v-if="pagination" :pagination="pagination" @changePage="navigateToPage"></flex-table-pagination>
+                <flex-table-pagination v-if="pagination" :pagination="pagination"
+                                       @changePage="navigateToPage"></flex-table-pagination>
             </div>
         </div>
 
@@ -117,11 +131,15 @@
   import FlexTableToggles from './FlexTableToggles.vue'
   import FlexTablePagination from './FlexTablePagination.vue'
   import FlexTableFilter from './FlexTableFilter.vue'
+  import FlexTableCollapsibleRow from './FlexTableCollapsibleRow.vue'
+  import FlexTableGroup from './FlexTableGroup.vue'
 
   export default {
     name: 'FlexTable',
 
     components: {
+      FlexTableGroup,
+      FlexTableCollapsibleRow,
       FlexTableFilter,
       FlexTablePagination,
       FlexTableToggles,
@@ -147,6 +165,11 @@
       filterPlaceholder: {default: settings.filterPlaceholder},
       filterInputClass: {default: settings.filterInputClass},
       filterNoResults: {default: settings.filterNoResults},
+      filterToggles: {default: () => [], type: Array},
+
+      searchPlaceholder: {default: settings.searchPlaceholder},
+      searchInputClass: {default: settings.searchInputClass},
+      searchNoResults: {default: settings.searchNoResults},
 
       sortBy: {default: '', type: String},
       sortOrder: {default: '', type: String},
@@ -163,13 +186,17 @@
     data: () => ({
       rows: [],
       columns: [],
+      childRowsVisibility: {},
       filter: '',
+      groupBy: [],
       sort: {
         fieldName: '',
         order: 'asc'
       },
       pagination: null,
       toggleGroups: [],
+      groupToggles: [],
+      groupByToggles: {},
       isBusy: false
     }),
 
@@ -178,10 +205,28 @@
         if (_.isArray(this.data)) {
           this.mountData()
         }
+      },
+      groupByToggles: {
+        handler (groupToggles) {
+          let groups = []
+          for (var key in groupToggles) {
+            if (groupToggles[key].enabled === true) {
+              groups.push(key)
+            }
+          }
+          this.groupBy = groups
+        },
+        deep: true
       }
     },
 
     computed: {
+      hasCollapsibleRows () {
+        return this.groupedRows.length > 0 || this.hasChildData === true
+      },
+      hasChildData () {
+        return this.rows.filter(row => row[this.childRowsKey]).length > 0
+      },
       tableClasses () {
         return classList('flex-table', this.tableClass, this.isBusy ? 'flex-table-loading' : '')
       },
@@ -194,6 +239,7 @@
         let groupKeys = Object.create({})
         this.toggleableColumns.forEach((col) => {
           Vue.set(groupKeys, col.toggleableGroup, {
+            type: 'column',
             visible: true,
             label: col.toggleableGroup,
             columns: this.columnToggles.filter(column => column.toggleableGroup === col.toggleableGroup)
@@ -214,14 +260,20 @@
         return this.visibleColumns.filter(column => column.filterable === true)
       },
 
+      groupedRowColumns () {
+        return this.columns.filter(column => column.rowGroup === true)
+      },
+
       displayedRows () {
+        const rows = this.groupBy.length ? this.groupedRows : this.sortedRows
+
         if (!this.showFilter) {
-          return this.sortedRows
+          return rows
         }
         if (!this.columns.filter(column => column._props.filterable === true).length) {
-          return this.sortedRows
+          return rows
         }
-        return this.sortedRows.filter((row) => {
+        return rows.filter((row) => {
           return this.visibleColumns
             .filter(column => column._props.filterable === true)
             .map(column => _.get(row, column._props.show) ? _.get(row, column._props.show).toString().toLowerCase() : '')
@@ -234,23 +286,65 @@
 
       sortedRows () {
         if (this.sort.fieldName === '') {
-          return this.tableRows
+          return this.rows
         }
         if (this.visibleColumns.length === 0) {
-          return this.tableRows
+          return this.rows
         }
         const sortColumn = this.getColumn(this.sort.fieldName)
         if (!sortColumn) {
-          return this.tableRows
+          return this.rows
         }
-        return _.orderBy(this.tableRows, this.sort.fieldName, this.sort.order)
+        return _.orderBy(this.rows, this.sort.fieldName, this.sort.order)
       },
 
-      tableRows () {
-        return this.rows.map((row) => {
+      groupedRows () {
+        if (!this.groupBy.length) {
+          return this.sortedRows
+        }
+
+        let rows = []
+
+        const grouped = _.groupBy(this.sortedRows, this.groupBy[0])
+        for (var key in grouped) {
+          var row = Object.create({})
+          var group = _.orderBy(grouped[key], 'parentId')
+          row = group.shift()
+          Vue.set(row, 'isGroup', true)
+          Vue.set(row, 'groupedRows', group)
           Vue.set(row, 'showChildren', false)
-          return row
+          rows.push(row)
+        }
+        return rows
+      },
+
+      groupedRowCollection () {
+        if (!this.groupBy.length) {
+          return this.sortedRows
+        }
+
+        let rows = []
+
+        this.groupBy.reverse().forEach((group) => {
+          var groups
+
+          if (rows.length) {
+            groups = _.groupBy(rows, group)
+          } else {
+            groups = _.groupBy(this.sortedRows, group)
+          }
+
+          for (var key in groups) {
+            var row = Object.create({})
+            var ordered = _.orderBy(groups[key], 'parentId')
+            row = group.shift()
+            Vue.set(row, 'isGroup', true)
+            Vue.set(row, 'groupedRows', ordered)
+            Vue.set(row, 'showChildren', false)
+            rows.push(row)
+          }
         })
+        return rows
       }
     },
 
@@ -289,6 +383,17 @@
         this.toggleGroups = [...new Set(this.toggleableColumns.map(col => col.toggleableGroup))]
       },
 
+      mapGroupToggles () {
+        this.groupToggles = [...new Set(this.groupedRowColumns.map(col => col.show))]
+        this.groupedRowColumns.forEach((col) => {
+          Vue.set(this.groupByToggles, col.show, {
+            type: 'group',
+            enabled: false,
+            label: !col.rowGroupLabel ? col.show : col.rowGroupLabel
+          })
+        })
+      },
+
       async fetchDataFromServer () {
         const page = this.pagination && this.pagination.currentPage ? this.pagination.currentPage : 1
         const response = await this.data({
@@ -302,13 +407,51 @@
 
       async mountData () {
         this.isBusy = true
-        this.rows = _.isArray(this.data) ? this.data : await this.fetchDataFromServer()
+        const data = _.isArray(this.data) ? this.data : await this.fetchDataFromServer()
+
+        let rowId = 0
+        this.rows = data.map(row => {
+          row.flexTableRowId = rowId++
+          return row
+        })
+
+        if (this.childRows) {
+          this.mapChildRows()
+        }
+
         this.isBusy = false
+      },
+
+      mapChildRows () {
+        let childRowsVisibility = {}
+        this.rows.forEach(row => {
+          childRowsVisibility['flexRow' + row.flexTableRowId] = false
+        })
+
+        this.childRowsVisibility = Object.assign({}, childRowsVisibility)
       },
 
       async navigateToPage (page) {
         this.pagination.currentPage = page
         await this.mountData()
+      },
+
+      isChildrenVisible (rowId) {
+        return this.childRowsVisibility['flexRow' + rowId]
+      },
+
+      toggleChildrenVisible (rowId) {
+        this.childRowsVisibility['flexRow' + rowId] = !this.childRowsVisibility['flexRow' + rowId]
+      },
+
+      updateGroupedRowToggles (toggleGroup, enabled, type) {
+        if (type === 'group') {
+          for (var key in this.groupByToggles) {
+            if (this.groupByToggles[key].label === toggleGroup) {
+              Vue.set(this.groupByToggles[key], 'enabled', enabled)
+            }
+          }
+        }
       }
     },
 
@@ -316,6 +459,8 @@
       this.mountColumns()
       await this.mountData()
       await this.mapToggles()
+      await this.mapGroupToggles()
+      this.$root.$on('flex-table-toggle::change', this.updateGroupedRowToggles)
     },
 
     created () {

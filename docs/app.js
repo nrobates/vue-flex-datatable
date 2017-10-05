@@ -55,6 +55,8 @@ new Vue({
     ],
     rows: [
       {
+        id: 1,
+        parentId: 0,
         firstName: 'John',
         lastName: 'Doe',
         email: 'johndoe@example.com',
@@ -62,6 +64,8 @@ new Vue({
         nested: {song: 'Done Dirt Cheap'},
         children: [
           {
+            id: 2,
+            parentId: 1,
             firstName: 'Max',
             lastName: 'Joshie',
             email: 'maxj@example.com',
@@ -69,6 +73,8 @@ new Vue({
             nested: {song: 'Back in Black'}
           },
           {
+            id: 3,
+            parentId: 1,
             firstName: 'Josh',
             lastName: 'Max',
             email: 'jmax@example.com',
@@ -78,6 +84,8 @@ new Vue({
         ]
       },
       {
+        id: 4,
+        parentId: 1,
         firstName: 'Jane',
         lastName: 'Doe',
         email: 'janedoe@example.com',
@@ -85,6 +93,8 @@ new Vue({
         nested: {song: 'Enter Sandman'}
       },
       {
+        id: 5,
+        parentId: 0,
         firstName: 'Jack',
         lastName: 'Davis',
         email: 'jackdavis@example.com',
@@ -92,6 +102,8 @@ new Vue({
         nested: {song: 'Fire and Ice'}
       },
       {
+        id: 6,
+        parentId: 0,
         firstName: 'Joan',
         lastName: 'Davis',
         email: 'joandavis@example.com',
@@ -105,6 +117,8 @@ new Vue({
       let page1 = {
         data: [
           {
+            id: 1,
+            parentId: 0,
             firstName: 'John',
             lastName: 'Doe',
             email: 'johndoe@example.com',
@@ -112,6 +126,8 @@ new Vue({
             nested: {song: 'Done Dirt Cheap'},
             children: [
               {
+                id: 2,
+                parentId: 1,
                 firstName: 'Max',
                 lastName: 'Joshie',
                 email: 'maxj@example.com',
@@ -119,6 +135,8 @@ new Vue({
                 nested: {song: 'Back in Black'}
               },
               {
+                id: 3,
+                parentId: 1,
                 firstName: 'Josh',
                 lastName: 'Max',
                 email: 'jmax@example.com',
@@ -128,6 +146,8 @@ new Vue({
             ]
           },
           {
+            id: 4,
+            parentId: 0,
             firstName: 'Jane',
             lastName: 'Doe',
             email: 'janedoe@example.com',
@@ -135,6 +155,8 @@ new Vue({
             nested: {song: 'Enter Sandman'}
           },
           {
+            id: 5,
+            parentId: 0,
             firstName: 'Jack',
             lastName: 'Davis',
             email: 'jackdavis@example.com',
@@ -142,6 +164,8 @@ new Vue({
             nested: {song: 'Fire and Ice'}
           },
           {
+            id: 6,
+            parentId: 0,
             firstName: 'Joan',
             lastName: 'Davis',
             email: 'joandavis@example.com',
@@ -158,6 +182,8 @@ new Vue({
       let page2 = {
         data: [
           {
+            id: 7,
+            parentId: 0,
             firstName: 'Mitch',
             lastName: 'Campbell',
             email: 'mitchc@example.com',
@@ -166,6 +192,8 @@ new Vue({
             children: []
           },
           {
+            id: 8,
+            parentId: 0,
             firstName: 'Jackie',
             lastName: 'Dot',
             email: 'jackiedot@example.com',
@@ -174,6 +202,8 @@ new Vue({
             children: []
           },
           {
+            id: 9,
+            parentId: 0,
             firstName: 'Jervis',
             lastName: 'Jefferson',
             email: 'jj@example.com',

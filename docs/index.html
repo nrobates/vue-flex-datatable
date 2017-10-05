@@ -14,7 +14,16 @@
             <div class="card mt-5 mb-5">
                 <h4 class="card-header bg-info text-center">Vue Flex Datatable</h4>
                 <div class="card-body">
-                    <flex-table :data="fetchData" show-filter toggle-label="Column Toggles:">
+                    <flex-table
+                            :data="fetchData"
+                            show-search
+                            show-filter
+                            show-group-by
+                            toggle-label="Column Toggles:"
+                            child-rows
+                            child-row-key="children"
+                            :filter-toggles="[{label: 'Stay Info', filter: 'stay'}, {label: 'Guest', filter: 'guest'}]"
+                    >
                         <flex-table-column label="" column-class="text-center align-content-center justify-content-center" :column-styles="{width: '20px'}">
                             <template scope="row">
                                 <label class="form-check-label">
@@ -23,10 +32,10 @@
                             </template>
                         </flex-table-column>
                         <flex-table-column label="First Name" show="firstName" sortable toggleable toggleable-group="name" filterable></flex-table-column>
-                        <flex-table-column label="Last Name" show="lastName" sortable toggleable toggleable-group="name" filterable></flex-table-column>
+                        <flex-table-column label="Last Name" show="lastName" sortable toggleable toggleable-group="name" row-group row-group-label="Last Name" filterable></flex-table-column>
                         <flex-table-column label="Email" show="email" sortable toggleable toggleable-group="email" filterable></flex-table-column>
                         <flex-table-column label="Nested" show="nested.song" sortable toggleable toggleable-group="nested" filterable></flex-table-column>
-                        <flex-table-column label="Phone" show="phone" sortable filterable></flex-table-column>
+                        <flex-table-column label="Phone" show="phone" sortable filterable row-group row-group-label="Phone"></flex-table-column>
                         <flex-table-column label="Actions" :column-styles="{width: '100px'}">
                             <template scope="row">
                                 <button class="btn btn-success btn-sm"><i class="fa fa-plus"></i></button>

@@ -21,6 +21,7 @@ test('sets default data', (t) => {
     rows: [],
     columns: [],
     filter: '',
+    groupBy: '',
     pagination: null,
     sort: {fieldName: '', order: 'asc'},
     toggleGroups: [],

@@ -1,7 +1,7 @@
 <template>
     <div>
         <span><strong>{{label}}</strong></span>
-        <flex-table-toggle v-for="toggle in toggles" :key="toggle.label" :label="toggle.label" :value="toggle.visible"></flex-table-toggle>
+        <flex-table-toggle v-for="toggle in toggles" :key="toggle.label" :label="toggle.label" :value="toggle.type === 'group' ? toggle.enabled : toggle.visible" :type="toggle.type"></flex-table-toggle>
     </div>
 </template>
 

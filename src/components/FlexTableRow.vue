@@ -1,33 +1,29 @@
 <template>
     <tr>
-        <td v-if="childRows"></td>
-        <flex-table-column
-                v-for="(column, cIndex) in columns"
-                :key="cIndex"
-                :row="data"
-                :column="column"
-        ></flex-table-column>
+        <td v-if="hasToggle">
+            <a href="#" class="btn btn-sm btn-link"
+
+            >
+                <i :class="['fa', {'fa-plus-circle': !data.showChildren, 'fa-minus-circle': data.showChildren}]"></i>
+            </a>
+        </td>
+        <flex-table-cell v-for="(column, index) in columns" :key="index" :column="column" :row="data"></flex-table-cell>
     </tr>
 </template>
 
 <script>
-  import FlexTableColumn from './FlexTableColumn.vue'
+  import FlexTableCell from './FlexTableCell.vue'
 
   export default {
     name: 'FlexTableRow',
-    components: {FlexTableColumn},
+    components: {FlexTableCell},
     props: {
       data: {required: true, type: Object},
-      columns: {required: true, type: Array},
-      childRows: {default: false, type: Boolean},
-      childRowsKey: {default: null, type: String}
+      columns: {required: true, type: Array}
     },
     computed: {
-      bodyOpen () {
-        return this.childRows ? '<tbody>' : ''
-      },
-      bodyClose () {
-        return this.childRows ? '</tbody>' : ''
+      hasToggle () {
+        return this.data.isGroup === true
       }
     }
   }
