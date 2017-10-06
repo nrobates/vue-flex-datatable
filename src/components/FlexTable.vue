@@ -43,7 +43,7 @@
             </tr>
             </thead>
 
-            <template v-if="rows.length">
+            <template v-if="displayedRows.length">
                 <template v-if="childRows">
                     <template v-for="(row, rIndex) in displayedRows">
                         <tbody :key="rIndex" :id="'flex-table-row-' + rIndex" class="flex-table-row">
@@ -82,7 +82,16 @@
 
             <tbody v-else>
             <tr>
-                <td :colspan="columns.length" class="flex-table-no-data text-center">There are currently no records</td>
+                <td :colspan="columns.length" class="flex-table-no-data text-center" v-if="filter.length">
+                    <slot name="noFilterResults">
+                        {{filterNoResults}}
+                    </slot>
+                </td>
+                <td :colspan="columns.length" class="flex-table-no-data text-center" v-else>
+                    <slot name="noResults">
+                        {{searchNoResults}}
+                    </slot>
+                </td>
             </tr>
             </tbody>
         </table>
