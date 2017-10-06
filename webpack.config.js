@@ -13,7 +13,7 @@ module.exports = merge(require('./webpack.base'), {
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: '[name].js',
-    library: 'vue-table-component',
+    library: 'vue-flex-datatable',
     libraryTarget: 'umd'
   },
 
