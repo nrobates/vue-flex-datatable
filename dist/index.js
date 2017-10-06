@@ -4,9 +4,9 @@
 	else if(typeof define === 'function' && define.amd)
 		define(["vue"], factory);
 	else if(typeof exports === 'object')
-		exports["vue-table-component"] = factory(require("vue"));
+		exports["vue-flex-datatable"] = factory(require("vue"));
 	else
-		root["vue-table-component"] = factory(root["vue"]);
+		root["vue-flex-datatable"] = factory(root["vue"]);
 })(this, function(__WEBPACK_EXTERNAL_MODULE_244__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
