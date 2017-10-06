@@ -25710,7 +25710,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         "click": _vm.updateSort
       }
     })
-  })], 2)]), _vm._v(" "), (_vm.rows.length) ? [(_vm.childRows) ? [_vm._l((_vm.displayedRows), function(row, rIndex) {
+  })], 2)]), _vm._v(" "), (_vm.displayedRows.length) ? [(_vm.childRows) ? [_vm._l((_vm.displayedRows), function(row, rIndex) {
     return [_c('tbody', {
       key: rIndex,
       staticClass: "flex-table-row",
@@ -25785,12 +25785,17 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         }
       })
     }))
-  }))] : _c('tbody', [_c('tr', [_c('td', {
+  }))] : _c('tbody', [_c('tr', [(_vm.filter.length) ? _c('td', {
     staticClass: "flex-table-no-data text-center",
     attrs: {
       "colspan": _vm.columns.length
     }
-  }, [_vm._v("There are currently no records")])])])], 2), _vm._v(" "), _c('div', {
+  }, [_vm._t("noFilterResults", [_vm._v("\n                    " + _vm._s(_vm.filterNoResults) + "\n                ")])], 2) : _c('td', {
+    staticClass: "flex-table-no-data text-center",
+    attrs: {
+      "colspan": _vm.columns.length
+    }
+  }, [_vm._t("noResults", [_vm._v("\n                    " + _vm._s(_vm.searchNoResults) + "\n                ")])], 2)])])], 2), _vm._v(" "), _c('div', {
     staticClass: "row"
   }, [_c('div', {
     staticClass: "col text-right align-self-center pr-0"
