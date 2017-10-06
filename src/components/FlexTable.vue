@@ -3,7 +3,8 @@
         <div class="row">
             <div class="col-12 col-md-6 mb-2 text-center flex-table-search-wrapper" v-show="showSearch">
                 <slot name="search">
-                    <flex-table-search v-model="localSearch" :disableSearch="isBusy" @submit="doSearch"></flex-table-search>
+                    <flex-table-search v-model="localSearch" :disableSearch="isBusy"
+                                       @submit="doSearch"></flex-table-search>
                 </slot>
             </div>
             <div class="col-12 col-md-6 mb-2 text-center flex-table-filter-wrapper" v-show="showFilter">
@@ -13,7 +14,8 @@
                         v-model="filter"
                 ></flex-table-filter>
             </div>
-            <div class="col-12 col-md-6 mb-2 align-content-center flex-table-toggles-wrapper" v-show="columnToggles.length">
+            <div class="col-12 col-md-6 mb-2 align-content-center flex-table-toggles-wrapper"
+                 v-show="columnToggles.length">
                 <flex-table-toggles
                         :label="toggleLabel"
                         :toggles="columnToggleGroups"
@@ -90,7 +92,8 @@
                 <span class="fa fa-circle-o-notch fa-spin" v-if="isBusy"></span>
             </div>
             <div class="col-auto justify-content-end">
-                <flex-table-pagination v-if="pagination" :pagination="pagination" @changePage="navigateToPage"></flex-table-pagination>
+                <flex-table-pagination v-if="pagination" :pagination="pagination"
+                                       @changePage="navigateToPage"></flex-table-pagination>
             </div>
         </div>
 
@@ -191,7 +194,9 @@
       searchBy (newVal, oldVal) {
         if (newVal !== oldVal) {
           this.localSearch = newVal
-          this.doSearch()
+          if (this.localSearch && this.localSearch.length > 0) {
+            this.doSearch()
+          }
         }
       },
       localSearch (newVal, oldVal) {
@@ -331,7 +336,8 @@
         // Map the data to add unique row id to each row
         // and also to prevent affecting Vuex state management
         let rowId = 0
-        this.rows = data.map(row => {
+
+        this.rows = data.map((row) => {
           row.flexTableRowId = rowId++
           return row
         })
