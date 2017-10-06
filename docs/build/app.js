@@ -30486,7 +30486,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       searchBy: function searchBy(newVal, oldVal) {
         if (newVal !== oldVal) {
           this.localSearch = newVal;
-          this.doSearch();
+          if (this.localSearch && this.localSearch.length > 0) {
+            this.doSearch();
+          }
         }
       },
       localSearch: function localSearch(newVal, oldVal) {
@@ -30701,6 +30703,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                   // Map the data to add unique row id to each row
                   // and also to prevent affecting Vuex state management
                   rowId = 0;
+
 
                   this.rows = data.map(function (row) {
                     row.flexTableRowId = rowId++;
