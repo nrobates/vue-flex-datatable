@@ -360,7 +360,7 @@
 
         <div class="row" v-if="searchNoResultsNoTable">
             <div class="col-12">
-                <slot name="noResults"></slot>
+                <template slot="noResults"></template>
             </div>
         </div>
 
