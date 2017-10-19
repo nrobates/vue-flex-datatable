@@ -25872,7 +25872,12 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "row"
   }, [_c('div', {
     staticClass: "col-12"
-  }, [_vm._t("noResults")], 2)]) : _vm._e(), _vm._v(" "), _c('div', {
+  }, [_c('template', {
+    attrs: {
+      "slot": "noResults"
+    },
+    slot: "noResults"
+  })], 2)]) : _vm._e(), _vm._v(" "), _c('div', {
     staticClass: "row"
   }, [_c('div', {
     staticClass: "col text-right align-self-center pr-0"
