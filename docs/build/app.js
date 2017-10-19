@@ -30309,6 +30309,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                       } else {
                         data = page1;
                       }
+                      data = {
+                        data: [],
+                        pagination: {}
+                      };
                       return new _promise2.default(function (resolve) {
                         return setTimeout(function () {
                           return resolve(data);
@@ -30445,6 +30449,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       searchPlaceholder: { default: _settings2.default.searchPlaceholder },
       searchInputClass: { default: _settings2.default.searchInputClass },
       searchNoResults: { default: _settings2.default.searchNoResults },
+      searchNoResultsNoTable: { default: false },
 
       sortBy: { default: '', type: String },
       sortOrder: { default: '', type: String },
@@ -30500,7 +30505,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
     computed: {
       tableClasses: function tableClasses() {
-        return (0, _helpers.classList)('flex-table', this.tableClass, this.isBusy ? 'flex-table-loading' : '');
+        return (0, _helpers.classList)('flex-table', this.tableClass, this.isBusy ? 'flex-table-loading' : '', this.searchNoResultsNoTable && !this.displayedRows.length ? 'd-none' : '');
       },
       columnToggles: function columnToggles() {
         return this.columns.filter(function (column) {
@@ -36032,7 +36037,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "colspan": _vm.columns.length
     }
-  }, [_vm._t("noResults", [_vm._v("\n                    " + _vm._s(_vm.searchNoResults) + "\n                ")])], 2)])])], 2), _vm._v(" "), _c('div', {
+  }, [_vm._t("noResults", [_vm._v("\n                    " + _vm._s(_vm.searchNoResults) + "\n                ")])], 2)])])], 2), _vm._v(" "), (_vm.searchNoResultsNoTable) ? _c('div', {
+    staticClass: "row"
+  }, [_c('div', {
+    staticClass: "col-12"
+  }, [_vm._t("noResults")], 2)]) : _vm._e(), _vm._v(" "), _c('div', {
     staticClass: "row"
   }, [_c('div', {
     staticClass: "col text-right align-self-center pr-0"

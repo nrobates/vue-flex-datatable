@@ -198,6 +198,10 @@ new Vue({
           } else {
             data = page1
           }
+          data = {
+            data: [],
+            pagination: {}
+          }
           return new Promise(resolve => setTimeout(() => resolve(data), 3000))
         }
       }

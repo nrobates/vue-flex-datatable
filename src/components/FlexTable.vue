@@ -1,117 +1,3 @@
-<template>
-    <div class="flex-table-wrapper">
-        <div class="row">
-            <div class="col-12 col-md-6 mb-2 text-center flex-table-search-wrapper" v-show="showSearch">
-                <slot name="search">
-                    <flex-table-search v-model="localSearch" :disableSearch="isBusy"
-                                       @submit="doSearch"></flex-table-search>
-                </slot>
-            </div>
-            <div class="col-12 col-md-6 mb-2 text-center flex-table-filter-wrapper" v-show="showFilter">
-                <flex-table-filter
-                        :placeholder="filterPlaceholder"
-                        :inputClass="filterInputClass"
-                        v-model="filter"
-                ></flex-table-filter>
-            </div>
-            <div class="col-12 col-md-6 mb-2 align-content-center flex-table-toggles-wrapper"
-                 v-show="columnToggles.length">
-                <flex-table-toggles
-                        :label="toggleLabel"
-                        :toggles="columnToggleGroups"
-                        class="mr-1"
-                ></flex-table-toggles>
-
-            </div>
-            <div class="col-12 col-md-6 mb-2 text-right align-content-center flex-table-group-by-wrapper"
-                 v-show="showGroupBy">
-                <span><strong>Group By: </strong></span>
-            </div>
-        </div>
-
-        <table :class="tableClasses" :aria-busy="isBusy">
-            <thead>
-            <tr>
-                <td v-if="childRows"></td>
-                <flex-table-header-column
-                        v-for="(column, cIndex) in visibleColumns"
-                        :key="cIndex"
-                        :column="column"
-                        :sort="sort"
-                        @click="updateSort"
-                ></flex-table-header-column>
-            </tr>
-            </thead>
-
-            <template v-if="displayedRows.length">
-                <template v-if="childRows">
-                    <template v-for="(row, rIndex) in displayedRows">
-                        <tbody :key="rIndex" :id="'flex-table-row-' + rIndex" class="flex-table-row">
-                        <tr>
-                            <td>
-                                <a href="#" class="btn btn-sm btn-link" :class="{'disabled': !row[childRowKey]}"
-                                   :disabled="!row[childRowKey]"
-                                   @click.prevent="row.showChildren = !row.showChildren"><i
-                                        :class="['fa', {'fa-plus-circle': !row.showChildren, 'fa-minus-circle': row.showChildren}]"></i></a>
-                            </td>
-                            <flex-table-cell v-for="(column, cIndex) in visibleColumns" :key="cIndex" :column="column"
-                                             :row="row"></flex-table-cell>
-                        </tr>
-                        </tbody>
-                        <transition name="fade">
-                            <tbody :id="'flex-table-child-rows-' + rIndex" v-show="row.showChildren"
-                                   class="flex-table-child-rows">
-                            <tr v-for="(childRow, crIndex) in row[childRowKey]" :key="crIndex">
-                                <td></td>
-                                <flex-table-cell v-for="(column, cIndex) in visibleColumns" :key="cIndex"
-                                                 :column="column"
-                                                 :row="childRow"></flex-table-cell>
-                            </tr>
-                            </tbody>
-                        </transition>
-                    </template>
-                </template>
-
-                <tbody v-else>
-                <tr v-for="(row, rIndex) in displayedRows" :key="rIndex">
-                    <flex-table-cell v-for="(column, cIndex) in visibleColumns" :key="cIndex" :column="column"
-                                     :row="row"></flex-table-cell>
-                </tr>
-                </tbody>
-            </template>
-
-            <tbody v-else>
-            <tr>
-                <td :colspan="columns.length" class="flex-table-no-data text-center" v-if="filter.length">
-                    <slot name="noFilterResults">
-                        {{filterNoResults}}
-                    </slot>
-                </td>
-                <td :colspan="columns.length" class="flex-table-no-data text-center" v-else>
-                    <slot name="noResults">
-                        {{searchNoResults}}
-                    </slot>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-
-        <div class="row">
-            <div class="col text-right align-self-center pr-0">
-                <span class="fa fa-circle-o-notch fa-spin" v-if="isBusy"></span>
-            </div>
-            <div class="col-auto justify-content-end">
-                <flex-table-pagination v-if="pagination" :pagination="pagination"
-                                       @changePage="navigateToPage"></flex-table-pagination>
-            </div>
-        </div>
-
-        <div style="display: none;">
-            <slot></slot>
-        </div>
-    </div>
-</template>
-
 <script>
   import _ from 'lodash'
   import Vue from 'vue'
@@ -163,6 +49,7 @@
       searchPlaceholder: {default: settings.searchPlaceholder},
       searchInputClass: {default: settings.searchInputClass},
       searchNoResults: {default: settings.searchNoResults},
+      searchNoResultsNoTable: {default: false},
 
       sortBy: {default: '', type: String},
       sortOrder: {default: '', type: String},
@@ -217,7 +104,7 @@
 
     computed: {
       tableClasses () {
-        return classList('flex-table', this.tableClass, this.isBusy ? 'flex-table-loading' : '')
+        return classList('flex-table', this.tableClass, this.isBusy ? 'flex-table-loading' : '', this.searchNoResultsNoTable && !this.displayedRows.length ? 'd-none' : '')
       },
 
       columnToggles () {
@@ -372,6 +259,126 @@
     }
   }
 </script>
+
+<template>
+    <div class="flex-table-wrapper">
+        <div class="row">
+            <div class="col-12 col-md-6 mb-2 text-center flex-table-search-wrapper" v-show="showSearch">
+                <slot name="search">
+                    <flex-table-search v-model="localSearch" :disableSearch="isBusy"
+                                       @submit="doSearch"></flex-table-search>
+                </slot>
+            </div>
+            <div class="col-12 col-md-6 mb-2 text-center flex-table-filter-wrapper" v-show="showFilter">
+                <flex-table-filter
+                        :placeholder="filterPlaceholder"
+                        :inputClass="filterInputClass"
+                        v-model="filter"
+                ></flex-table-filter>
+            </div>
+            <div class="col-12 col-md-6 mb-2 align-content-center flex-table-toggles-wrapper"
+                 v-show="columnToggles.length">
+                <flex-table-toggles
+                        :label="toggleLabel"
+                        :toggles="columnToggleGroups"
+                        class="mr-1"
+                ></flex-table-toggles>
+
+            </div>
+            <div class="col-12 col-md-6 mb-2 text-right align-content-center flex-table-group-by-wrapper"
+                 v-show="showGroupBy">
+                <span><strong>Group By: </strong></span>
+            </div>
+        </div>
+
+        <table :class="tableClasses" :aria-busy="isBusy">
+            <thead>
+            <tr>
+                <td v-if="childRows"></td>
+                <flex-table-header-column
+                        v-for="(column, cIndex) in visibleColumns"
+                        :key="cIndex"
+                        :column="column"
+                        :sort="sort"
+                        @click="updateSort"
+                ></flex-table-header-column>
+            </tr>
+            </thead>
+
+            <template v-if="displayedRows.length">
+                <template v-if="childRows">
+                    <template v-for="(row, rIndex) in displayedRows">
+                        <tbody :key="rIndex" :id="'flex-table-row-' + rIndex" class="flex-table-row">
+                        <tr>
+                            <td>
+                                <a href="#" class="btn btn-sm btn-link" :class="{'disabled': !row[childRowKey]}"
+                                   :disabled="!row[childRowKey]"
+                                   @click.prevent="row.showChildren = !row.showChildren"><i
+                                        :class="['fa', {'fa-plus-circle': !row.showChildren, 'fa-minus-circle': row.showChildren}]"></i></a>
+                            </td>
+                            <flex-table-cell v-for="(column, cIndex) in visibleColumns" :key="cIndex" :column="column"
+                                             :row="row"></flex-table-cell>
+                        </tr>
+                        </tbody>
+                        <transition name="fade">
+                            <tbody :id="'flex-table-child-rows-' + rIndex" v-show="row.showChildren"
+                                   class="flex-table-child-rows">
+                            <tr v-for="(childRow, crIndex) in row[childRowKey]" :key="crIndex">
+                                <td></td>
+                                <flex-table-cell v-for="(column, cIndex) in visibleColumns" :key="cIndex"
+                                                 :column="column"
+                                                 :row="childRow"></flex-table-cell>
+                            </tr>
+                            </tbody>
+                        </transition>
+                    </template>
+                </template>
+
+                <tbody v-else>
+                <tr v-for="(row, rIndex) in displayedRows" :key="rIndex">
+                    <flex-table-cell v-for="(column, cIndex) in visibleColumns" :key="cIndex" :column="column"
+                                     :row="row"></flex-table-cell>
+                </tr>
+                </tbody>
+            </template>
+
+            <tbody v-else>
+            <tr>
+                <td :colspan="columns.length" class="flex-table-no-data text-center" v-if="filter.length">
+                    <slot name="noFilterResults">
+                        {{filterNoResults}}
+                    </slot>
+                </td>
+                <td :colspan="columns.length" class="flex-table-no-data text-center" v-else>
+                    <slot name="noResults">
+                        {{searchNoResults}}
+                    </slot>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="row" v-if="searchNoResultsNoTable">
+            <div class="col-12">
+                <slot name="noResults"></slot>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col text-right align-self-center pr-0">
+                <span class="fa fa-circle-o-notch fa-spin" v-if="isBusy"></span>
+            </div>
+            <div class="col-auto justify-content-end">
+                <flex-table-pagination v-if="pagination" :pagination="pagination"
+                                       @changePage="navigateToPage"></flex-table-pagination>
+            </div>
+        </div>
+
+        <div style="display: none;">
+            <slot></slot>
+        </div>
+    </div>
+</template>
 
 <style lang="scss" scoped>
     .flex-table {
