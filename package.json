@@ -1,6 +1,6 @@
 {
   "name": "vue-flex-datatable",
-  "version": "0.0.17",
+  "version": "0.0.18",
   "description": "A flexible use-case datatable for Vue.js 2.x",
   "author": "Nicholas Bates <info@nrobates.com>",
   "private": false,
