@@ -20113,8 +20113,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                 case 3:
                   response = _context2.sent;
 
-                  this.pagination = response.meta && response.meta.pagination ? response.meta.pagination : null;
-                  return _context2.abrupt('return', response);
+                  if (response.meta !== undefined) {
+                    this.pagination = response.meta.pagination;
+                  }
+                  return _context2.abrupt('return', response.data);
 
                 case 6:
                 case 'end':
@@ -20132,7 +20134,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       }(),
       mountData: function () {
         var _ref3 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee3() {
-          var response, rowId;
+          var data, rowId;
           return _regenerator2.default.wrap(function _callee3$(_context3) {
             while (1) {
               switch (_context3.prev = _context3.next) {
@@ -20156,7 +20158,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                   _context3.t0 = _context3.sent;
 
                 case 8:
-                  response = _context3.t0;
+                  data = _context3.t0;
 
 
                   // Map the data to add unique row id to each row
@@ -20164,7 +20166,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                   rowId = 0;
 
 
-                  this.rows = response.data.map(function (row) {
+                  this.rows = data.map(function (row) {
                     row.flexTableRowId = rowId++;
                     return row;
                   });
