@@ -223,19 +223,21 @@
           sort: this.sort,
           page: page
         })
-        this.pagination = (response.meta && response.meta.pagination) ? response.meta.pagination : null
-        return response
+        if (response.meta !== undefined) {
+          this.pagination = response.meta.pagination
+        }
+        return response.data
       },
 
       async mountData () {
         this.isBusy = true
-        const response = _.isArray(this.data) ? this.data : await this.fetchDataFromServer()
+        const data = _.isArray(this.data) ? this.data : await this.fetchDataFromServer()
 
         // Map the data to add unique row id to each row
         // and also to prevent affecting Vuex state management
         let rowId = 0
 
-        this.rows = response.data.map((row) => {
+        this.rows = data.map((row) => {
           row.flexTableRowId = rowId++
           return row
         })
