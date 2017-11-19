@@ -51,6 +51,8 @@
       searchNoResults: {default: settings.searchNoResults},
       searchNoResultsNoTable: {default: false},
 
+      enableAddRecord: {default: false, type: Boolean},
+
       sortBy: {default: '', type: String},
       sortOrder: {default: '', type: String},
 
@@ -214,26 +216,26 @@
       },
 
       async fetchDataFromServer () {
-        const page = this.pagination && this.pagination.currentPage ? this.pagination.currentPage : 1
+        const page = this.pagination && this.pagination.current_page ? this.pagination.current_page : 1
         const response = await this.data({
           search: this.localSearch,
           filter: this.filter,
           sort: this.sort,
           page: page
         })
-        this.pagination = response.pagination
+        this.pagination = (response.meta.pagination) ? response.meta.pagination : null
         return response.data
       },
 
       async mountData () {
         this.isBusy = true
-        const data = _.isArray(this.data) ? this.data : await this.fetchDataFromServer()
+        const response = _.isArray(this.data) ? this.data : await this.fetchDataFromServer()
 
         // Map the data to add unique row id to each row
         // and also to prevent affecting Vuex state management
         let rowId = 0
 
-        this.rows = data.map((row) => {
+        this.rows = response.data.map((row) => {
           row.flexTableRowId = rowId++
           return row
         })
@@ -242,7 +244,7 @@
       },
 
       async navigateToPage (page) {
-        this.pagination.currentPage = page
+        this.pagination.current_page = page
         await this.mountData()
       }
     },
@@ -339,6 +341,11 @@
                     <flex-table-cell v-for="(column, cIndex) in visibleColumns" :key="cIndex" :column="column"
                                      :row="row"></flex-table-cell>
                 </tr>
+                <tr v-if="enableAddRecord">
+                    <td v-for="(column, index) in visibleColumns" :key="index">
+                        <input type="text" class="form-control" :name="'newRecord[' + column.show + ']'">
+                    </td>
+                </tr>
                 </tbody>
             </template>
 
@@ -360,7 +367,9 @@
 
         <div class="row" v-if="searchNoResultsNoTable">
             <div class="col-12">
-                <template slot="noResults"></template>
+                <slot name="noResultsNoTable">
+                    {{searchNoResults}}
+                </slot>
             </div>
         </div>
 
