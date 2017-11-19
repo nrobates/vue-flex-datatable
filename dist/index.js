@@ -19903,6 +19903,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       searchNoResults: { default: _settings2.default.searchNoResults },
       searchNoResultsNoTable: { default: false },
 
+      enableAddRecord: { default: false, type: Boolean },
+
       sortBy: { default: '', type: String },
       sortOrder: { default: '', type: String },
 
@@ -20099,7 +20101,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             while (1) {
               switch (_context2.prev = _context2.next) {
                 case 0:
-                  page = this.pagination && this.pagination.currentPage ? this.pagination.currentPage : 1;
+                  page = this.pagination && this.pagination.current_page ? this.pagination.current_page : 1;
                   _context2.next = 3;
                   return this.data({
                     search: this.localSearch,
@@ -20111,7 +20113,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                 case 3:
                   response = _context2.sent;
 
-                  this.pagination = response.pagination;
+                  this.pagination = response.meta.pagination ? response.meta.pagination : null;
                   return _context2.abrupt('return', response.data);
 
                 case 6:
@@ -20130,7 +20132,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       }(),
       mountData: function () {
         var _ref3 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee3() {
-          var data, rowId;
+          var response, rowId;
           return _regenerator2.default.wrap(function _callee3$(_context3) {
             while (1) {
               switch (_context3.prev = _context3.next) {
@@ -20154,7 +20156,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                   _context3.t0 = _context3.sent;
 
                 case 8:
-                  data = _context3.t0;
+                  response = _context3.t0;
 
 
                   // Map the data to add unique row id to each row
@@ -20162,7 +20164,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                   rowId = 0;
 
 
-                  this.rows = data.map(function (row) {
+                  this.rows = response.data.map(function (row) {
                     row.flexTableRowId = rowId++;
                     return row;
                   });
@@ -20189,7 +20191,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             while (1) {
               switch (_context4.prev = _context4.next) {
                 case 0:
-                  this.pagination.currentPage = page;
+                  this.pagination.current_page = page;
                   _context4.next = 3;
                   return this.mountData();
 
@@ -20345,7 +20347,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       childFormatter: { type: Function, default: null },
       visible: { type: Boolean, default: true },
       columnClass: { type: String, default: '' },
-      columnStyles: { type: Object, default: function _default() {} }
+      columnStyles: { type: Object, default: function _default() {} },
+      type: { type: String, default: 'standard' }
     },
     data: function data() {
       return {
@@ -20497,6 +20500,12 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           }
         }
         return styles;
+      },
+      isStandardType: function isStandardType() {
+        return this.column.type === 'standard';
+      },
+      isSelectAllType: function isSelectAllType() {
+        return this.column.type === 'selectAll';
       }
     },
     methods: {
@@ -20553,35 +20562,35 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
     },
 
     computed: {
-      currentPage: function currentPage() {
-        return this.pagination.currentPage || 1;
+      current_page: function current_page() {
+        return this.pagination.current_page || 1;
       },
       pageItems: function pageItems() {
-        return typeof this.pagination.totalPages === 'undefined' ? [] : (0, _range2.default)(1, this.pagination.totalPages + 1);
+        return typeof this.pagination.total_pages === 'undefined' ? [] : (0, _range2.default)(1, this.pagination.total_pages + 1);
       },
       showPagingElement: function showPagingElement() {
-        if (typeof this.pagination.totalPages === 'undefined') {
+        if (typeof this.pagination.total_pages === 'undefined') {
           return false;
         }
         if (this.pagination.count === 0) {
           return false;
         }
-        return this.pagination.totalPages > 1;
+        return this.pagination.total_pages > 1;
       },
       hasPreviousPage: function hasPreviousPage() {
-        return this.currentPage > 1;
+        return this.current_page > 1;
       },
       hasNextPage: function hasNextPage() {
-        return this.currentPage < this.pagination.totalPages;
+        return this.current_page < this.pagination.total_pages;
       }
     },
 
     methods: {
       isPageActive: function isPageActive(page) {
-        return this.currentPage === page;
+        return this.current_page === page;
       },
       selectPage: function selectPage(page) {
-        if (this.pagination.currentPage === page) {
+        if (this.pagination.current_page === page) {
           return;
         }
 
@@ -25464,7 +25473,15 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "click": _vm.clicked
     }
-  }, [_vm._v("\n    " + _vm._s(_vm.label) + "\n")])
+  }, [(_vm.isStandardType) ? _c('span', [_vm._v(_vm._s(_vm.label))]) : (_vm.isSelectAllType) ? _c('label', {
+    staticClass: "form-check-label"
+  }, [_c('input', {
+    staticClass: "form-check-input",
+    attrs: {
+      "type": "checkbox",
+      "value": ""
+    }
+  })]) : _vm._e()])
 },staticRenderFns: []}
 
 /***/ }),
@@ -25556,7 +25573,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "click": function($event) {
         $event.preventDefault();
-        _vm.selectPage(_vm.currentPage - 1)
+        _vm.selectPage(_vm.current_page - 1)
       }
     }
   }, [_c('span', {
@@ -25597,7 +25614,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "click": function($event) {
         $event.preventDefault();
-        _vm.selectPage(_vm.currentPage + 1)
+        _vm.selectPage(_vm.current_page + 1)
       }
     }
   }, [_c('span', {
@@ -25846,7 +25863,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         })
       })], 2)
     }))])]
-  })] : _c('tbody', _vm._l((_vm.displayedRows), function(row, rIndex) {
+  })] : _c('tbody', [_vm._l((_vm.displayedRows), function(row, rIndex) {
     return _c('tr', {
       key: rIndex
     }, _vm._l((_vm.visibleColumns), function(column, cIndex) {
@@ -25858,7 +25875,17 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         }
       })
     }))
-  }))] : _c('tbody', [_c('tr', [(_vm.filter.length) ? _c('td', {
+  }), _vm._v(" "), (_vm.enableAddRecord) ? _c('tr', _vm._l((_vm.visibleColumns), function(column, index) {
+    return _c('td', {
+      key: index
+    }, [_c('input', {
+      staticClass: "form-control",
+      attrs: {
+        "type": "text",
+        "name": 'newRecord[' + column.show + ']'
+      }
+    })])
+  })) : _vm._e()], 2)] : _c('tbody', [_c('tr', [(_vm.filter.length) ? _c('td', {
     staticClass: "flex-table-no-data text-center",
     attrs: {
       "colspan": _vm.columns.length
@@ -25872,12 +25899,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "row"
   }, [_c('div', {
     staticClass: "col-12"
-  }, [_c('template', {
-    attrs: {
-      "slot": "noResults"
-    },
-    slot: "noResults"
-  })], 2)]) : _vm._e(), _vm._v(" "), _c('div', {
+  }, [_vm._t("noResultsNoTable", [_vm._v("\n                " + _vm._s(_vm.searchNoResults) + "\n            ")])], 2)]) : _vm._e(), _vm._v(" "), _c('div', {
     staticClass: "row"
   }, [_c('div', {
     staticClass: "col text-right align-self-center pr-0"
