@@ -7,7 +7,10 @@
         :class="headerClasses"
         :style="columnStyles"
     >
-        {{label}}
+        <span v-if="isStandardType">{{label}}</span>
+        <label class="form-check-label" v-else-if="isSelectAllType">
+            <input class="form-check-input" type="checkbox" value="">
+        </label>
     </th>
 </template>
 
@@ -62,6 +65,12 @@
           }
         }
         return styles
+      },
+      isStandardType () {
+        return this.column.type === 'standard'
+      },
+      isSelectAllType () {
+        return this.column.type === 'selectAll'
       }
     },
     methods: {

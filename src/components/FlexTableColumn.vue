@@ -20,7 +20,8 @@
       childFormatter: {type: Function, default: null},
       visible: {type: Boolean, default: true},
       columnClass: {type: String, default: ''},
-      columnStyles: {type: Object, default: () => {}}
+      columnStyles: {type: Object, default: () => {}},
+      type: {type: String, default: 'standard'}
     },
     data () {
       return {

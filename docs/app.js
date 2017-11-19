@@ -105,6 +105,16 @@ new Vue({
   methods: {
     async fetchData ({search, page, filter, sort}) {
       let page1 = {
+        meta: {
+          pagination: {
+            count: 3,
+            current_page: 1,
+            links: [],
+            per_page: 3,
+            total: 6,
+            total_pages: 2
+          }
+        },
         data: [
           {
             firstName: 'John',
@@ -150,14 +160,20 @@ new Vue({
             phone: '222-222-2222',
             nested: {song: 'Crackerman'}
           }
-        ],
-        pagination: {
-          currentPage: 1,
-          totalPages: 2
-        }
+        ]
       }
 
       let page2 = {
+        meta: {
+          pagination: {
+            count: 3,
+            current_page: 2,
+            links: [],
+            per_page: 3,
+            total: 6,
+            total_pages: 2
+          }
+        },
         data: [
           {
             firstName: 'Mitch',
@@ -183,26 +199,26 @@ new Vue({
             nested: {song: 'Fire and Ice'},
             children: []
           }
-        ],
-        pagination: {
-          currentPage: 2,
-          totalPages: 2
-        }
+        ]
       }
 
       const $myHttp = {
         get (url, page) {
-          let data
+          let data, pagination
           if (page === 2) {
             data = page2
+            pagination = page2.meta.pagination
           } else {
             data = page1
+            pagination = page1.meta.pagination
           }
           data = {
-            data: [],
-            pagination: {}
+            data: data,
+            meta: {
+              pagination
+            }
           }
-          return new Promise(resolve => setTimeout(() => resolve(data), 3000))
+          return new Promise(resolve => setTimeout(() => resolve(data), 1500))
         }
       }
       let response = await $myHttp.get('http://api.randomuser.me/', page)
