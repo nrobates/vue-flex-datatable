@@ -20113,8 +20113,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                 case 3:
                   response = _context2.sent;
 
-                  this.pagination = response.meta.pagination ? response.meta.pagination : null;
-                  return _context2.abrupt('return', response.data);
+                  this.pagination = response.meta && response.meta.pagination ? response.meta.pagination : null;
+                  return _context2.abrupt('return', response);
 
                 case 6:
                 case 'end':
