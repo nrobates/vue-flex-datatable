@@ -223,8 +223,8 @@
           sort: this.sort,
           page: page
         })
-        this.pagination = (response.meta.pagination) ? response.meta.pagination : null
-        return response.data
+        this.pagination = (response.meta && response.meta.pagination) ? response.meta.pagination : null
+        return response
       },
 
       async mountData () {
