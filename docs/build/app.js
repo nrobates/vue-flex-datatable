@@ -30230,54 +30230,26 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
               switch (_context.prev = _context.next) {
                 case 0:
                   page1 = {
-                    meta: {
-                      pagination: {
-                        count: 3,
-                        current_page: 1,
-                        links: [],
-                        per_page: 3,
-                        total: 6,
-                        total_pages: 2
+                    'data': [{
+                      'id': 1,
+                      'name': 'Nicholas Bates',
+                      'first_name': 'Nicholas',
+                      'last_name': 'Bates',
+                      'email': 'nicholas@appbut.com',
+                      'created_at': { 'date': '2017-03-16 03:03:03.000000', 'timezone_type': 3, 'timezone': 'UTC' },
+                      'updated_at': { 'date': '2017-11-13 20:03:19.000000', 'timezone_type': 3, 'timezone': 'UTC' },
+                      'roles': { 'data': [{ 'id': 1, 'name': 'Admin', 'slug': 'admin' }] }
+                    }],
+                    'meta': {
+                      'pagination': {
+                        'total': 1,
+                        'count': 1,
+                        'per_page': 20,
+                        'current_page': 1,
+                        'total_pages': 1,
+                        'links': []
                       }
-                    },
-                    data: [{
-                      firstName: 'John',
-                      lastName: 'Doe',
-                      email: 'johndoe@example.com',
-                      phone: '222-222-2222',
-                      nested: { song: 'Done Dirt Cheap' },
-                      children: [{
-                        firstName: 'Max',
-                        lastName: 'Joshie',
-                        email: 'maxj@example.com',
-                        phone: '333-333-3333',
-                        nested: { song: 'Back in Black' }
-                      }, {
-                        firstName: 'Josh',
-                        lastName: 'Max',
-                        email: 'jmax@example.com',
-                        phone: '333-333-3333',
-                        nested: { song: 'Born to be wild' }
-                      }]
-                    }, {
-                      firstName: 'Jane',
-                      lastName: 'Doe',
-                      email: 'janedoe@example.com',
-                      phone: '222-222-2222',
-                      nested: { song: 'Enter Sandman' }
-                    }, {
-                      firstName: 'Jack',
-                      lastName: 'Davis',
-                      email: 'jackdavis@example.com',
-                      phone: '222-222-2222',
-                      nested: { song: 'Fire and Ice' }
-                    }, {
-                      firstName: 'Joan',
-                      lastName: 'Davis',
-                      email: 'joandavis@example.com',
-                      phone: '222-222-2222',
-                      nested: { song: 'Crackerman' }
-                    }]
+                    }
                   };
                   page2 = {
                     meta: {
@@ -30315,21 +30287,13 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                   };
                   $myHttp = {
                     get: function get(url, page) {
-                      var data = void 0,
-                          pagination = void 0;
+                      var data = void 0;
                       if (page === 2) {
                         data = page2;
-                        pagination = page2.meta.pagination;
                       } else {
                         data = page1;
-                        pagination = page1.meta.pagination;
                       }
-                      data = {
-                        data: data,
-                        meta: {
-                          pagination: pagination
-                        }
-                      };
+
                       return new _promise2.default(function (resolve) {
                         return setTimeout(function () {
                           return resolve(data);
@@ -30678,10 +30642,11 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                 case 3:
                   response = _context2.sent;
 
-                  if (response.meta !== undefined) {
-                    this.pagination = response.meta.pagination;
+
+                  if (response.data.meta && response.data.meta.pagination) {
+                    this.pagination = response.data.meta.pagination;
                   }
-                  return _context2.abrupt('return', response.data);
+                  return _context2.abrupt('return', response.data.data);
 
                 case 6:
                 case 'end':
