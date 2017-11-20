@@ -223,10 +223,11 @@
           sort: this.sort,
           page: page
         })
-        if (response.meta !== undefined) {
-          this.pagination = response.meta.pagination
+
+        if (response.data.meta && response.data.meta.pagination) {
+          this.pagination = response.data.meta.pagination
         }
-        return response.data
+        return response.data.data
       },
 
       async mountData () {

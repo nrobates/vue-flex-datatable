@@ -105,62 +105,26 @@ new Vue({
   methods: {
     async fetchData ({search, page, filter, sort}) {
       let page1 = {
-        meta: {
-          pagination: {
-            count: 3,
-            current_page: 1,
-            links: [],
-            per_page: 3,
-            total: 6,
-            total_pages: 2
+        'data': [{
+          'id': 1,
+          'name': 'Nicholas Bates',
+          'first_name': 'Nicholas',
+          'last_name': 'Bates',
+          'email': 'nicholas@appbut.com',
+          'created_at': {'date': '2017-03-16 03:03:03.000000', 'timezone_type': 3, 'timezone': 'UTC'},
+          'updated_at': {'date': '2017-11-13 20:03:19.000000', 'timezone_type': 3, 'timezone': 'UTC'},
+          'roles': {'data': [{'id': 1, 'name': 'Admin', 'slug': 'admin'}]}
+        }],
+        'meta': {
+          'pagination': {
+            'total': 1,
+            'count': 1,
+            'per_page': 20,
+            'current_page': 1,
+            'total_pages': 1,
+            'links': []
           }
-        },
-        data: [
-          {
-            firstName: 'John',
-            lastName: 'Doe',
-            email: 'johndoe@example.com',
-            phone: '222-222-2222',
-            nested: {song: 'Done Dirt Cheap'},
-            children: [
-              {
-                firstName: 'Max',
-                lastName: 'Joshie',
-                email: 'maxj@example.com',
-                phone: '333-333-3333',
-                nested: {song: 'Back in Black'}
-              },
-              {
-                firstName: 'Josh',
-                lastName: 'Max',
-                email: 'jmax@example.com',
-                phone: '333-333-3333',
-                nested: {song: 'Born to be wild'}
-              }
-            ]
-          },
-          {
-            firstName: 'Jane',
-            lastName: 'Doe',
-            email: 'janedoe@example.com',
-            phone: '222-222-2222',
-            nested: {song: 'Enter Sandman'}
-          },
-          {
-            firstName: 'Jack',
-            lastName: 'Davis',
-            email: 'jackdavis@example.com',
-            phone: '222-222-2222',
-            nested: {song: 'Fire and Ice'}
-          },
-          {
-            firstName: 'Joan',
-            lastName: 'Davis',
-            email: 'joandavis@example.com',
-            phone: '222-222-2222',
-            nested: {song: 'Crackerman'}
-          }
-        ]
+        }
       }
 
       let page2 = {
@@ -204,20 +168,13 @@ new Vue({
 
       const $myHttp = {
         get (url, page) {
-          let data, pagination
+          let data
           if (page === 2) {
             data = page2
-            pagination = page2.meta.pagination
           } else {
             data = page1
-            pagination = page1.meta.pagination
           }
-          data = {
-            data: data,
-            meta: {
-              pagination
-            }
-          }
+
           return new Promise(resolve => setTimeout(() => resolve(data), 1500))
         }
       }
