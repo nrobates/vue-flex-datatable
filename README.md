@@ -1,5 +1,7 @@
 # vue-flex-datatable
 
+> THIS PACKAGE HAS BEEN ARCHIVED. NO FURTHER DEVELOPMENT WILL BE COMPLETED.
+
 > A flexible use-case datatable for Vue.js 2.x
 
 <p align="center">
